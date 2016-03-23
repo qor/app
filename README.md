@@ -1,13 +1,17 @@
-# App
+# Application Generator
 
 Application Generator
 
 ## Usage
 
 ```go
-Application := app.New()
+Application := app.New("Qor Example")
 
-Application.Generate()
+webEC := Application.Use(web_theme.EC)
+
+androidEC := Application.Use(android_theme.EC)
+
+Application.Create()
 ```
 
 ```go
@@ -17,8 +21,10 @@ Application.Generate()
 //   copy files (templates)
 //   generate
 //   build
+
 web.App{
   Name  string
+  Path string
   Theme app.Theme
 }
 
