@@ -15,6 +15,20 @@ Application.Create()
 ```
 
 ```go
+type EC struct {
+  Requires: {{"importpath", "name"}, {"importpath", "name"}}
+}
+```
+
+```go
+RegisterWidget(Widget{
+  Template: "product_list",
+  Context: func() {
+  }
+})
+```
+
+```go
 // Callbacks
 //   get theme
 //   get path
