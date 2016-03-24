@@ -2,7 +2,7 @@ package app
 
 import (
 	"bytes"
-	"fmt"
+	"errors"
 	"html/template"
 	"io/ioutil"
 	"os"
@@ -58,8 +58,6 @@ func (theme *Theme) GetTemplatesPath() string {
 func (theme *Theme) CopyFiles(app *Application) error {
 	templatesPath := theme.GetTemplatesPath()
 	return filepath.Walk(templatesPath, func(path string, info os.FileInfo, err error) error {
-		fmt.Println(path)
-		fmt.Println(err)
 		if err == nil {
 			var projectPath = theme.Path
 			var relativePath = strings.TrimPrefix(path, templatesPath)
@@ -73,7 +71,6 @@ func (theme *Theme) CopyFiles(app *Application) error {
 			} else if info.Mode().IsRegular() {
 				var source []byte
 				if source, err = ioutil.ReadFile(path); err == nil {
-					fmt.Println(source)
 					if filepath.Ext(path) == ".template" {
 						var tmpl *template.Template
 						if tmpl, err = template.New("").Funcs(app.FuncMap()).Parse(string(source)); err == nil {
@@ -86,11 +83,10 @@ func (theme *Theme) CopyFiles(app *Application) error {
 				}
 			}
 		}
-		fmt.Println(err)
 		return err
 	})
 }
 
 func (theme *Theme) Build(*Application) error {
-	panic("Build not implemented for Theme " + theme.Name)
+	return errors.New("Build not implemented for Theme " + theme.Name)
 }

@@ -1,6 +1,9 @@
 package app
 
-import "html/template"
+import (
+	"fmt"
+	"html/template"
+)
 
 type Application struct {
 	Name    string
@@ -39,6 +42,9 @@ func (app *Application) Create() (err error) {
 		}
 	}
 
+	if err != nil {
+		fmt.Println("Failed to create application:", err)
+	}
 	return
 }
 
