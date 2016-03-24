@@ -12,20 +12,28 @@ func New(name string) *Application {
 	return &Application{Name: name, funcMap: map[string]interface{}{}}
 }
 
+type ConfigureQorApplicationInterface interface {
+	ConfigureQorApplication(*Application) error
+}
+
 func (app *Application) Use(theme ThemeInterface) {
+	if configor, ok := theme.(ConfigureQorApplicationInterface); ok {
+		configor.ConfigureQorApplication(app)
+	}
+
 	app.Themes = append(app.Themes, theme)
 }
 
 func (app *Application) Create() (err error) {
 	for _, theme := range app.Themes {
-		if err = theme.CopyFiles(); err != nil {
+		if err = theme.CopyFiles(app); err != nil {
 			break
 		}
 	}
 
 	if err == nil {
 		for _, theme := range app.Themes {
-			if err = theme.Build(); err != nil {
+			if err = theme.Build(app); err != nil {
 				break
 			}
 		}
