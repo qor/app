@@ -20,6 +20,7 @@ type ConfigureQorApplicationInterface interface {
 }
 
 func (app *Application) Use(theme ThemeInterface) {
+	theme.SetApplication(app)
 	if configor, ok := theme.(ConfigureQorApplicationInterface); ok {
 		configor.ConfigureQorApplication(app)
 	}
@@ -29,14 +30,14 @@ func (app *Application) Use(theme ThemeInterface) {
 
 func (app *Application) Create() (err error) {
 	for _, theme := range app.Themes {
-		if err = theme.CopyFiles(app); err != nil {
+		if err = theme.CopyFiles(theme); err != nil {
 			break
 		}
 	}
 
 	if err == nil {
 		for _, theme := range app.Themes {
-			if err = theme.Build(app); err != nil {
+			if err = theme.Build(theme); err != nil {
 				break
 			}
 		}

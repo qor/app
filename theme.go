@@ -20,25 +20,27 @@ func init() {
 
 type ThemeInterface interface {
 	GetName() string
-	CopyFiles(*Application) error
-	Build(*Application) error
+	GetPath() string
+	GetTemplatesPath() string
+	CopyFiles(ThemeInterface) error
+	Build(ThemeInterface) error
+	GetApplication() *Application
+	SetApplication(*Application)
 }
 
 type Theme struct {
 	Name          string
 	Path          string
 	TemplatesPath string
+	Application   *Application
 }
 
 func (theme *Theme) GetName() string {
 	return theme.Name
 }
 
-func isExistingDir(pth string) (string, bool) {
-	if fi, err := os.Stat(pth); err == nil {
-		return pth, fi.Mode().IsDir()
-	}
-	return "", false
+func (theme *Theme) GetPath() string {
+	return theme.Path
 }
 
 func (theme *Theme) GetTemplatesPath() string {
@@ -55,11 +57,11 @@ func (theme *Theme) GetTemplatesPath() string {
 	return theme.TemplatesPath
 }
 
-func (theme *Theme) CopyFiles(app *Application) error {
+func (*Theme) CopyFiles(theme ThemeInterface) error {
 	templatesPath := theme.GetTemplatesPath()
 	return filepath.Walk(templatesPath, func(path string, info os.FileInfo, err error) error {
 		if err == nil {
-			var projectPath = theme.Path
+			var projectPath = theme.GetPath()
 			var relativePath = strings.TrimPrefix(path, templatesPath)
 
 			if projectPath == "" {
@@ -73,9 +75,9 @@ func (theme *Theme) CopyFiles(app *Application) error {
 				if source, err = ioutil.ReadFile(path); err == nil {
 					if filepath.Ext(path) == ".template" {
 						var tmpl *template.Template
-						if tmpl, err = template.New("").Funcs(app.FuncMap()).Parse(string(source)); err == nil {
+						if tmpl, err = template.New("").Funcs(theme.GetApplication().FuncMap()).Parse(string(source)); err == nil {
 							var result = bytes.NewBufferString("")
-							tmpl.Execute(result, app)
+							tmpl.Execute(result, theme)
 							source = result.Bytes()
 						}
 					}
@@ -87,6 +89,21 @@ func (theme *Theme) CopyFiles(app *Application) error {
 	})
 }
 
-func (theme *Theme) Build(*Application) error {
-	return errors.New("Build not implemented for Theme " + theme.Name)
+func (*Theme) Build(theme ThemeInterface) error {
+	return errors.New("Build not implemented for Theme " + theme.GetName())
+}
+
+func (theme *Theme) GetApplication() *Application {
+	return theme.Application
+}
+
+func (theme *Theme) SetApplication(app *Application) {
+	theme.Application = app
+}
+
+func isExistingDir(pth string) (string, bool) {
+	if fi, err := os.Stat(pth); err == nil {
+		return pth, fi.Mode().IsDir()
+	}
+	return "", false
 }

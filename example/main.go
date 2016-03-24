@@ -7,6 +7,6 @@ import (
 
 func main() {
 	Application := app.New("Qor Demo")
-	Application.Use(web_ec.EC)
+	Application.Use(&web_ec.EC{})
 	Application.Create()
 }

@@ -2,16 +2,17 @@ package web_ec
 
 import "github.com/qor/app"
 
-var EC = &ECTheme{}
-
-func init() {
-	EC.TemplatesPath = "github.com/qor/app/web_ec/templates"
-}
-
-type ECTheme struct {
+type EC struct {
 	app.Theme
 }
 
-func (ec ECTheme) ConfigureQorApplication(app *app.Application) {
+func (ec *EC) GetTemplatesPath() string {
+	if ec.TemplatesPath == "" {
+		ec.TemplatesPath = "github.com/qor/app/web_ec/templates"
+	}
+	return ec.Theme.GetTemplatesPath()
+}
+
+func (ec *EC) ConfigureQorApplication(app *app.Application) {
 	return
 }
