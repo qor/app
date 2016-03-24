@@ -11,7 +11,6 @@ import (
 
 type ThemeInterface interface {
 	GetName() string
-	GetPath() string
 	CopyFiles(*Application) error
 	Build(*Application) error
 }
@@ -20,6 +19,10 @@ type Theme struct {
 	Name          string
 	Path          string
 	TemplatesPath string
+}
+
+func (theme *Theme) GetName() string {
+	return theme.Name
 }
 
 func (theme *Theme) CopyFiles(app *Application) error {

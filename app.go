@@ -13,7 +13,7 @@ func New(name string) *Application {
 }
 
 type ConfigureQorApplicationInterface interface {
-	ConfigureQorApplication(*Application) error
+	ConfigureQorApplication(*Application)
 }
 
 func (app *Application) Use(theme ThemeInterface) {
