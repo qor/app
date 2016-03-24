@@ -22,6 +22,15 @@ func (app *Application) Create() (err error) {
 			break
 		}
 	}
+
+	if err == nil {
+		for _, theme := range app.Themes {
+			if err = theme.Build(); err != nil {
+				break
+			}
+		}
+	}
+
 	return
 }
 

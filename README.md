@@ -29,13 +29,6 @@ RegisterWidget(Widget{
 ```
 
 ```go
-// Callbacks
-//   get theme
-//   get path
-//   copy files (templates)
-//   generate
-//   build
-
 web.App{
   Name  string
   Path string

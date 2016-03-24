@@ -12,7 +12,8 @@ import (
 type ThemeInterface interface {
 	GetName() string
 	GetPath() string
-	CopyFiles() error
+	CopyFiles(*Application) error
+	Build(*Application) error
 }
 
 type Theme struct {
@@ -36,7 +37,7 @@ func (theme *Theme) CopyFiles(app *Application) error {
 							source = result.Bytes()
 						}
 					}
-					err = ioutil.WriteFile(filepath.Join(theme.Path, relativePath), source, os.ModePerm)
+					err = ioutil.WriteFile(filepath.Join(theme.Path, strings.TrimSuffix(relativePath, ".template")), source, os.ModePerm)
 				}
 			}
 		}
@@ -44,6 +45,6 @@ func (theme *Theme) CopyFiles(app *Application) error {
 	})
 }
 
-func (theme *Theme) Build() error {
+func (theme *Theme) Build(*Application) error {
 	panic("Build not implemented for Theme " + theme.Name)
 }
