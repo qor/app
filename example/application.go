@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/qor/app"
+	"github.com/qor/app/ios_ec"
 	"github.com/qor/app/web_ec"
 )
 
