@@ -13,10 +13,10 @@ func (ec *EC) GetTemplatesPath() string {
 	return ec.Theme.GetTemplatesPath()
 }
 
-func (ec *EC) ConfigureQorApplication(app *app.Application) {
+func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
 	return
 }
 
-func (ec *EC) Build(app *app.Application) {
-	return
+func (ec *EC) Build(theme app.ThemeInterface) error {
+	return nil
 }

@@ -16,13 +16,13 @@ func New(name string) *Application {
 }
 
 type ConfigureQorApplicationInterface interface {
-	ConfigureQorApplication(*Application)
+	ConfigureQorApplication(ThemeInterface)
 }
 
 func (app *Application) Use(theme ThemeInterface) {
 	theme.SetApplication(app)
 	if configor, ok := theme.(ConfigureQorApplicationInterface); ok {
-		configor.ConfigureQorApplication(app)
+		configor.ConfigureQorApplication(theme)
 	}
 
 	app.Themes = append(app.Themes, theme)
