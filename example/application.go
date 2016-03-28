@@ -8,5 +8,6 @@ import (
 func main() {
 	Application := app.New("Qor Demo")
 	Application.Use(&web_ec.EC{})
+	Application.Use(&ios_ec.EC{})
 	Application.Create()
 }
