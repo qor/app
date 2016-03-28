@@ -16,3 +16,7 @@ func (ec *EC) GetTemplatesPath() string {
 func (ec *EC) ConfigureQorApplication(app *app.Application) {
 	return
 }
+
+func (ec *EC) Build(app *app.Application) {
+	return
+}
