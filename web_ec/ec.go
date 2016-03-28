@@ -3,6 +3,7 @@ package web_ec
 import "github.com/qor/app"
 
 type EC struct {
+	Path string
 	app.Theme
 }
 
@@ -14,6 +15,7 @@ func (ec *EC) GetTemplatesPath() string {
 }
 
 func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
+	ec.Theme.Path = ec.Path
 	return
 }
 
