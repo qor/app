@@ -4,13 +4,12 @@ Application Generator
 
 ## Usage
 
-```go
-Application := app.New("Qor Example")
+```sh
+cd $GOPATH/src/github.com/qor
+git clone git@github.com:theplant/app.git
 
-Application.Use(web_theme.EC)
-Application.Use(android_theme.EC)
-
-Application.Create()
+cd $GOPATH/src/github.com/qor/app/example
+go run application.go
 ```
 
 ## License
