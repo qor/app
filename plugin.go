@@ -5,6 +5,7 @@ type PluginInterface interface {
 	DisableOption(name string) error
 	EnabledOptions() []string
 	EnabledOption(name string) bool
+	CopyFiles(PluginInterface) error // copy files for web, android, ios
 }
 
 type Plugin struct {

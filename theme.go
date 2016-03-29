@@ -96,6 +96,8 @@ func (*Theme) CopyFiles(theme ThemeInterface) error {
 		}
 		return err
 	})
+
+	// copy plugin files
 }
 
 func (*Theme) Build(theme ThemeInterface) error {

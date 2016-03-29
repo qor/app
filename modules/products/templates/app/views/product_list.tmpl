@@ -3,4 +3,8 @@ product index page
 {{range $product := .Products}}
   {{$product.Name}}
   {{$product.Code}}
+
+  {{if has_plugin "Cart"}}
+    Add To Cart
+  {{end}}
 {{end}}
