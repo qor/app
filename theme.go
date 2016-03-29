@@ -26,6 +26,7 @@ type ThemeInterface interface {
 	Build(ThemeInterface) error
 	GetApplication() *Application
 	SetApplication(*Application)
+	UsePlugin(plugin PluginInterface)
 	GetPlugin(name string) PluginInterface
 }
 
@@ -36,7 +37,7 @@ type Theme struct {
 	Application   *Application
 }
 
-func (theme *Theme) UsePlugin(name string) PluginInterface {
+func (theme *Theme) UsePlugin(plugin PluginInterface) {
 }
 
 func (theme *Theme) GetPlugin(name string) PluginInterface {
@@ -64,6 +65,7 @@ func (theme *Theme) GetTemplatesPath() string {
 	return theme.TemplatesPath
 }
 
+// Patch model, functions (golang, java, swift)
 func (*Theme) CopyFiles(theme ThemeInterface) error {
 	templatesPath := theme.GetTemplatesPath()
 	return filepath.Walk(templatesPath, func(path string, info os.FileInfo, err error) error {
