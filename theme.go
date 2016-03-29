@@ -26,6 +26,7 @@ type ThemeInterface interface {
 	Build(ThemeInterface) error
 	GetApplication() *Application
 	SetApplication(*Application)
+	GetPlugin(name string) PluginInterface
 }
 
 type Theme struct {
@@ -33,6 +34,12 @@ type Theme struct {
 	Path          string
 	TemplatesPath string
 	Application   *Application
+}
+
+func (theme *Theme) UsePlugin(name string) PluginInterface {
+}
+
+func (theme *Theme) GetPlugin(name string) PluginInterface {
 }
 
 func (theme *Theme) GetName() string {
