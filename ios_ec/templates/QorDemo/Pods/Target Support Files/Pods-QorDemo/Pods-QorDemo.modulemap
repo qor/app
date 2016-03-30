@@ -1,0 +1,6 @@
+framework module Pods_QorDemo {
+  umbrella header "Pods-QorDemo-umbrella.h"
+
+  export *
+  module * { export * }
+}
