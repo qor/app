@@ -8,9 +8,9 @@ import (
 
 func main() {
 	Application := app.New("Qor Demo")
-	Application.Use(&web_ec.EC{})
-	// product := theme.GetPlugin("product") // product.EnabledOptions()
-	// product.EnableOption("l10n")
+	theme := Application.Use(&web_ec.EC{})
+	product := theme.GetPlugin("Product")
+	product.EnableOption("l10n")
 
 	Application.Use(&ios_ec.EC{Path: "iOS"})
 	Application.Create()

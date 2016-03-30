@@ -4,8 +4,13 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 )
+
+type ConfigureQorPluginInterface interface {
+	ConfigureQorPlugin(PluginInterface)
+}
 
 type PluginInterface interface {
 	GetName() string
@@ -29,6 +34,12 @@ type Plugin struct {
 
 func (plugin *Plugin) GetName() string {
 	return plugin.Name
+}
+
+func (plugin *Plugin) ConfigureQorPlugin(p PluginInterface) {
+	if plugin.GetName() == "" {
+		plugin.Name = reflect.ValueOf(p).Elem().Type().Name()
+	}
 }
 
 func (plugin *Plugin) GetTemplatesPath() string {
@@ -62,6 +73,7 @@ func (plugin *Plugin) EnabledOption(name string) bool {
 }
 
 func (plugin *Plugin) EnableOption(name string) error {
+	plugin.Options = append(plugin.Options, name)
 	return nil
 }
 

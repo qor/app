@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+type ConfigureQorThemeInterface interface {
+	ConfigureQorTheme(ThemeInterface)
+}
+
 type ThemeInterface interface {
 	GetName() string
 	GetPath() string
@@ -75,6 +79,11 @@ func (theme *Theme) SetApplication(app *Application) {
 // Theme Plugins
 func (theme *Theme) UsePlugin(plugin PluginInterface) {
 	plugin.SetTheme(theme)
+
+	if configor, ok := plugin.(ConfigureQorPluginInterface); ok {
+		configor.ConfigureQorPlugin(plugin)
+	}
+
 	theme.Plugins = append(theme.Plugins, plugin)
 }
 

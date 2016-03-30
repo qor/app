@@ -14,7 +14,7 @@ func (ec *EC) GetTemplatesPath() string {
 	return ec.Theme.GetTemplatesPath()
 }
 
-func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
+func (ec *EC) ConfigureQorTheme(theme app.ThemeInterface) {
 	ec.Theme.Path = ec.Path
 	return
 }

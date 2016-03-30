@@ -15,14 +15,11 @@ func New(name string) *Application {
 	return &Application{Name: name, funcMap: map[string]interface{}{}}
 }
 
-type ConfigureQorApplicationInterface interface {
-	ConfigureQorApplication(ThemeInterface)
-}
-
 func (app *Application) Use(theme ThemeInterface) ThemeInterface {
 	theme.SetApplication(app)
-	if configor, ok := theme.(ConfigureQorApplicationInterface); ok {
-		configor.ConfigureQorApplication(theme)
+
+	if configor, ok := theme.(ConfigureQorThemeInterface); ok {
+		configor.ConfigureQorTheme(theme)
 	}
 
 	app.Themes = append(app.Themes, theme)
