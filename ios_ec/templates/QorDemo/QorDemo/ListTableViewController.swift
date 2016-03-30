@@ -12,17 +12,18 @@ import Kingfisher
 class ListTableViewController: UITableViewController {
 
     var items :[Phone] = []
-    var currentRow = 0
+    let cellReuseStr = "ReuseStr"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         title = "商品列表"
         
+        tableView.registerClass(ListCell.self, forCellReuseIdentifier: cellReuseStr)
+        
         if readData() {
             tableView.reloadData()
         }
-        print("items: \(items)")
     }
     
     func readData() -> Bool {
@@ -59,33 +60,22 @@ class ListTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("listCellReuseStr", forIndexPath: indexPath) as! ListCell
-        
-        // Configure the cell...
-        cell.titleLbl.text = items[indexPath.row].title
-        cell.amoutLbl.text = items[indexPath.row].amount
-        cell.priceLbl.text = items[indexPath.row].price
-        
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseStr, forIndexPath: indexPath) as! ListCell
 
-        cell.logoImgV.kf_setImageWithURL(NSURL(string: items[indexPath.row].imageUrlStr)!)
-        
+        let model = items[indexPath.row]
+        cell.refreshCellWithModel(model)
         
         return cell
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetail" {
-            let destController = segue.destinationViewController as! DetailViewController
-            
-            destController.imgUrlStr = items[currentRow].imageUrlStr
-        }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        currentRow = indexPath.row
-        self.performSegueWithIdentifier("showDetail", sender: self)
+        let model = items[indexPath.row]
+        let detailVC = DetailViewController()
+        detailVC.imgUrlStr = model.imageUrlStr
+        
+        navigationController!.pushViewController(detailVC, animated: true)
     }
     
     

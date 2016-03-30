@@ -5,4 +5,5 @@ target 'QorDemo' do
   pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'Kingfisher'
+  pod 'Cartography'
 end

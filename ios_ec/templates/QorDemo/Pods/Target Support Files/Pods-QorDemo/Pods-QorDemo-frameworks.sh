@@ -85,11 +85,13 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-QorDemo/Alamofire.framework"
+  install_framework "Pods-QorDemo/Cartography.framework"
   install_framework "Pods-QorDemo/Kingfisher.framework"
   install_framework "Pods-QorDemo/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-QorDemo/Alamofire.framework"
+  install_framework "Pods-QorDemo/Cartography.framework"
   install_framework "Pods-QorDemo/Kingfisher.framework"
   install_framework "Pods-QorDemo/SwiftyJSON.framework"
 fi
