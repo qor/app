@@ -1,22 +1,11 @@
 package app
 
 import (
-	"bytes"
 	"errors"
-	"html/template"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 )
-
-var root = "."
-
-func init() {
-	if path := os.Getenv("WEB_ROOT"); path != "" {
-		root = path
-	}
-}
 
 type ThemeInterface interface {
 	GetName() string
@@ -39,23 +28,6 @@ type Theme struct {
 	Plugins       []PluginInterface
 }
 
-func (theme *Theme) UsePlugin(plugin PluginInterface) {
-	theme.Plugins = append(theme.Plugins, plugin)
-}
-
-func (theme *Theme) GetPlugin(name string) PluginInterface {
-	for _, plugin := range theme.Plugins {
-		if name == plugin.GetName() {
-			return plugin
-		}
-	}
-	return nil
-}
-
-func (theme *Theme) GetPlugins() []PluginInterface {
-	return theme.Plugins
-}
-
 func (theme *Theme) GetName() string {
 	return theme.Name
 }
@@ -65,13 +37,15 @@ func (theme *Theme) GetPath() string {
 }
 
 func (theme *Theme) GetTemplatesPath() string {
-	if pth, ok := isExistingDir(filepath.Join(root, "vendor", theme.TemplatesPath)); ok {
-		return pth
-	}
-
-	for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
-		if pth, ok := isExistingDir(filepath.Join(gopath, "src", theme.TemplatesPath)); ok {
+	if theme.TemplatesPath != "" {
+		if pth, ok := isExistingDir(filepath.Join(root, "vendor", theme.TemplatesPath)); ok {
 			return pth
+		}
+
+		for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
+			if pth, ok := isExistingDir(filepath.Join(gopath, "src", theme.TemplatesPath)); ok {
+				return pth
+			}
 		}
 	}
 
@@ -80,51 +54,14 @@ func (theme *Theme) GetTemplatesPath() string {
 
 // Patch model, functions (golang, java, swift)
 func (*Theme) CopyFiles(theme ThemeInterface) error {
-	var themeTemplatesPath = theme.GetTemplatesPath()
-	var err = filepath.Walk(themeTemplatesPath, func(path string, info os.FileInfo, err error) error {
-		if err == nil {
-			var projectPath = theme.GetPath()
-			var relativePath = strings.TrimPrefix(path, themeTemplatesPath)
-
-			if projectPath == "" {
-				projectPath = "."
-			}
-
-			if info.IsDir() {
-				err = os.MkdirAll(filepath.Join(projectPath, relativePath), os.ModePerm)
-			} else if info.Mode().IsRegular() {
-				var source []byte
-				if source, err = ioutil.ReadFile(path); err == nil {
-					if filepath.Ext(path) == ".template" {
-						var tmpl *template.Template
-						if tmpl, err = template.New("").Funcs(theme.GetApplication().FuncMap()).Parse(string(source)); err == nil {
-							var result = bytes.NewBufferString("")
-							tmpl.Execute(result, theme)
-							source = result.Bytes()
-						}
-					}
-					err = ioutil.WriteFile(filepath.Join(projectPath, strings.TrimSuffix(relativePath, ".template")), source, os.ModePerm)
-				}
-			}
-		}
-		return err
-	})
-
-	if err == nil {
-		for _, plugin := range theme.GetPlugins() {
-			if err = plugin.CopyFiles(plugin); err != nil {
-				break
-			}
-		}
-	}
-
-	return err
+	return copyFiles(theme.GetTemplatesPath(), theme.GetPath(), theme.GetApplication().FuncMap(), theme)
 }
 
 func (*Theme) Build(theme ThemeInterface) error {
 	return errors.New("Build not implemented for Theme " + theme.GetName())
 }
 
+// Theme Application
 func (theme *Theme) GetApplication() *Application {
 	return theme.Application
 }
@@ -133,9 +70,21 @@ func (theme *Theme) SetApplication(app *Application) {
 	theme.Application = app
 }
 
-func isExistingDir(pth string) (string, bool) {
-	if fi, err := os.Stat(pth); err == nil {
-		return pth, fi.Mode().IsDir()
+// Theme Plugins
+func (theme *Theme) UsePlugin(plugin PluginInterface) {
+	plugin.SetTheme(theme)
+	theme.Plugins = append(theme.Plugins, plugin)
+}
+
+func (theme *Theme) GetPlugins() []PluginInterface {
+	return theme.Plugins
+}
+
+func (theme *Theme) GetPlugin(name string) PluginInterface {
+	for _, plugin := range theme.Plugins {
+		if name == plugin.GetName() {
+			return plugin
+		}
 	}
-	return "", false
+	return nil
 }

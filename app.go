@@ -34,6 +34,12 @@ func (app *Application) Create() (err error) {
 		if err = theme.CopyFiles(theme); err != nil {
 			break
 		}
+
+		for _, plugin := range theme.GetPlugins() {
+			if err = plugin.CopyFiles(plugin); err != nil {
+				break
+			}
+		}
 	}
 
 	if err == nil {
