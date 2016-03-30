@@ -67,7 +67,7 @@ func (plugin *Plugin) DisableOption(name string) error {
 	return nil
 }
 
-func (plugin *Plugin) CopyFiles(PluginInterface) error {
+func (*Plugin) CopyFiles(plugin PluginInterface) error {
 	return copyFiles(plugin.GetTemplatesPath(), plugin.GetTheme().GetPath(), plugin.GetTheme().GetApplication().FuncMap(), plugin)
 }
 

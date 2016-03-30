@@ -25,12 +25,12 @@ func isExistingDir(pth string) (string, bool) {
 }
 
 func copyFiles(source, projectPath string, funcMap template.FuncMap, object interface{}) error {
-	if projectPath == "" {
-		projectPath = "."
-	}
-
 	if source == "" {
 		return nil
+	}
+
+	if projectPath == "" {
+		projectPath = "."
 	}
 
 	return filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
