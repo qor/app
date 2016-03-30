@@ -1,12 +1,13 @@
-# Application Generator
+# Qor Application Generator - for DEMO
 
-Application Generator
+Qor Application Generator
 
 ## Usage
 
 ```sh
 cd $GOPATH/src/github.com/qor
-git clone git@github.com:theplant/app.git
+git clone git@github.com:theplant/qor-app-generator.git
+mv qor-app-generator app
 
 cd $GOPATH/src/github.com/qor/app/example
 go run application.go
