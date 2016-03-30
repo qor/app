@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
@@ -18,6 +19,7 @@ type ThemeInterface interface {
 	UsePlugin(plugin PluginInterface)
 	GetPlugins() []PluginInterface
 	GetPlugin(name string) PluginInterface
+	FuncMap() template.FuncMap
 }
 
 type Theme struct {
@@ -54,7 +56,7 @@ func (theme *Theme) GetTemplatesPath() string {
 
 // Patch model, functions (golang, java, swift)
 func (*Theme) CopyFiles(theme ThemeInterface) error {
-	return copyFiles(theme.GetTemplatesPath(), theme.GetPath(), theme.GetApplication().FuncMap(), theme)
+	return copyFiles(theme.GetTemplatesPath(), theme.GetPath(), theme.FuncMap(), theme)
 }
 
 func (*Theme) Build(theme ThemeInterface) error {
@@ -87,4 +89,18 @@ func (theme *Theme) GetPlugin(name string) PluginInterface {
 		}
 	}
 	return nil
+}
+
+// FuncMap
+func (theme *Theme) FuncMap() template.FuncMap {
+	funcMap := theme.GetApplication().FuncMap()
+	funcMap["has_plugin"] = func(name string) bool {
+		for _, plugin := range theme.GetPlugins() {
+			if plugin.GetName() == name {
+				return true
+			}
+		}
+		return false
+	}
+	return funcMap
 }

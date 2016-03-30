@@ -84,9 +84,14 @@ func (plugin *Plugin) SetTheme(theme ThemeInterface) {
 
 // FuncMap
 func (plugin *Plugin) FuncMap() template.FuncMap {
-	funcMap := plugin.GetTheme().GetApplication().FuncMap()
-	funcMap["has_option"] = func(options ...string) bool {
-		return true
+	funcMap := plugin.GetTheme().FuncMap()
+	funcMap["has_option"] = func(name string) bool {
+		for _, option := range plugin.EnabledOptions() {
+			if option == name {
+				return true
+			}
+		}
+		return false
 	}
 	return funcMap
 }
