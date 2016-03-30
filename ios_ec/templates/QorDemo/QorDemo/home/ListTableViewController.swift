@@ -26,6 +26,12 @@ class ListTableViewController: UITableViewController {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+                
+        tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0) , atScrollPosition: .Top, animated: false)
+    }
+    
     func readData() -> Bool {
         if let path = NSBundle.mainBundle().pathForResource("list", ofType: "json") {
             do {
