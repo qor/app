@@ -21,7 +21,7 @@ func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
 	ec.Theme.Path = ec.Path
 
 	// Add Product Plugin
-	ec.Use(&products.Product{})
+	ec.UsePlugin(&products.Product{})
 	return
 }
 

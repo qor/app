@@ -35,12 +35,20 @@ type Theme struct {
 	Path          string
 	TemplatesPath string
 	Application   *Application
+	Plugins       []PluginInterface
 }
 
 func (theme *Theme) UsePlugin(plugin PluginInterface) {
+	theme.Plugins = append(theme.Plugins, plugin)
 }
 
 func (theme *Theme) GetPlugin(name string) PluginInterface {
+	for _, plugin := range theme.Plugins {
+		if name == plugin.GetName() {
+			return plugin
+		}
+	}
+	return nil
 }
 
 func (theme *Theme) GetName() string {

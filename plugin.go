@@ -1,15 +1,21 @@
 package app
 
 type PluginInterface interface {
+	GetName() string
 	EnableOption(name string) error
 	DisableOption(name string) error
 	EnabledOptions() []string
 	EnabledOption(name string) bool
-	CopyFiles(PluginInterface) error // copy files for web, android, ios
+	// CopyFiles(PluginInterface) error // copy files for web, android, ios
 }
 
 type Plugin struct {
+	Name    string
 	Options []string
+}
+
+func (plugin *Plugin) GetName() string {
+	return plugin.Name
 }
 
 func (plugin *Plugin) EnabledOptions() []string {
