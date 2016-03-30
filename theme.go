@@ -27,6 +27,7 @@ type ThemeInterface interface {
 	GetApplication() *Application
 	SetApplication(*Application)
 	UsePlugin(plugin PluginInterface)
+	GetPlugins() []PluginInterface
 	GetPlugin(name string) PluginInterface
 }
 
@@ -49,6 +50,10 @@ func (theme *Theme) GetPlugin(name string) PluginInterface {
 		}
 	}
 	return nil
+}
+
+func (theme *Theme) GetPlugins() []PluginInterface {
+	return theme.Plugins
 }
 
 func (theme *Theme) GetName() string {
@@ -75,11 +80,11 @@ func (theme *Theme) GetTemplatesPath() string {
 
 // Patch model, functions (golang, java, swift)
 func (*Theme) CopyFiles(theme ThemeInterface) error {
-	templatesPath := theme.GetTemplatesPath()
-	return filepath.Walk(templatesPath, func(path string, info os.FileInfo, err error) error {
+	var themeTemplatesPath = theme.GetTemplatesPath()
+	var err = filepath.Walk(themeTemplatesPath, func(path string, info os.FileInfo, err error) error {
 		if err == nil {
 			var projectPath = theme.GetPath()
-			var relativePath = strings.TrimPrefix(path, templatesPath)
+			var relativePath = strings.TrimPrefix(path, themeTemplatesPath)
 
 			if projectPath == "" {
 				projectPath = "."
@@ -105,7 +110,15 @@ func (*Theme) CopyFiles(theme ThemeInterface) error {
 		return err
 	})
 
-	// copy plugin files
+	if err == nil {
+		for _, plugin := range theme.GetPlugins() {
+			if err = plugin.CopyFiles(plugin); err != nil {
+				break
+			}
+		}
+	}
+
+	return err
 }
 
 func (*Theme) Build(theme ThemeInterface) error {

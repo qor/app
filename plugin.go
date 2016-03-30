@@ -6,7 +6,7 @@ type PluginInterface interface {
 	DisableOption(name string) error
 	EnabledOptions() []string
 	EnabledOption(name string) bool
-	// CopyFiles(PluginInterface) error // copy files for web, android, ios
+	CopyFiles(PluginInterface) error // copy files for web, android, ios
 }
 
 type Plugin struct {
@@ -36,5 +36,9 @@ func (plugin *Plugin) EnableOption(name string) error {
 }
 
 func (plugin *Plugin) DisableOption(name string) error {
+	return nil
+}
+
+func (plugin *Plugin) CopyFiles(PluginInterface) error {
 	return nil
 }
