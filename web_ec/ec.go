@@ -1,6 +1,10 @@
 package web_ec
 
-import "github.com/qor/app"
+import (
+	"github.com/qor/app"
+	"github.com/qor/app/modules/cart"
+	"github.com/qor/app/modules/products"
+)
 
 type EC struct {
 	Path string
@@ -16,6 +20,10 @@ func (ec *EC) GetTemplatesPath() string {
 
 func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
 	ec.Theme.Path = ec.Path
+
+	// Add Product Plugin
+	ec.UsePlugin(&products.Product{})
+	ec.UsePlugin(&cart.Cart{})
 	return
 }
 

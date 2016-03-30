@@ -1,0 +1,16 @@
+package models
+
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/qor/l10n"
+)
+
+type Product struct {
+	gorm.Model
+	Name string
+	Code string
+
+	{{if has_option "l10n"}}
+	l10n.Locale
+	{{end}}
+}
