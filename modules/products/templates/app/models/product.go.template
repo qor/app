@@ -10,7 +10,7 @@ type Product struct {
 	Name string
 	Code string
 
-	{{if has_option "l10n"}}
+	{{if has_option "l10n" -}}
 	l10n.Locale
-	{{end}}
+	{{- end}}
 }

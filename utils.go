@@ -46,8 +46,12 @@ func copyFiles(source, projectPath string, funcMap template.FuncMap, object inte
 						var tmpl *template.Template
 						if tmpl, err = template.New("").Funcs(funcMap).Parse(string(source)); err == nil {
 							var result = bytes.NewBufferString("")
-							tmpl.Execute(result, object)
+							if err = tmpl.Execute(result, object); err != nil {
+								return err
+							}
 							source = result.Bytes()
+						} else {
+							return err
 						}
 					}
 					err = ioutil.WriteFile(filepath.Join(projectPath, strings.TrimSuffix(relativePath, ".template")), source, os.ModePerm)

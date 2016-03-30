@@ -1,6 +1,7 @@
 package app
 
 import (
+	"html/template"
 	"os"
 	"path/filepath"
 	"strings"
@@ -16,6 +17,7 @@ type PluginInterface interface {
 	CopyFiles(PluginInterface) error // copy files for web, android, ios
 	GetTheme() ThemeInterface
 	SetTheme(theme ThemeInterface)
+	FuncMap() template.FuncMap
 }
 
 type Plugin struct {
@@ -68,7 +70,7 @@ func (plugin *Plugin) DisableOption(name string) error {
 }
 
 func (*Plugin) CopyFiles(plugin PluginInterface) error {
-	return copyFiles(plugin.GetTemplatesPath(), plugin.GetTheme().GetPath(), plugin.GetTheme().GetApplication().FuncMap(), plugin)
+	return copyFiles(plugin.GetTemplatesPath(), plugin.GetTheme().GetPath(), plugin.FuncMap(), plugin)
 }
 
 // Plugin Application
@@ -78,4 +80,13 @@ func (plugin *Plugin) GetTheme() ThemeInterface {
 
 func (plugin *Plugin) SetTheme(theme ThemeInterface) {
 	plugin.Theme = theme
+}
+
+// FuncMap
+func (plugin *Plugin) FuncMap() template.FuncMap {
+	funcMap := plugin.GetTheme().GetApplication().FuncMap()
+	funcMap["has_option"] = func(options ...string) bool {
+		return true
+	}
+	return funcMap
 }

@@ -30,14 +30,15 @@ func (app *Application) Use(theme ThemeInterface) ThemeInterface {
 }
 
 func (app *Application) Create() (err error) {
+Application:
 	for _, theme := range app.Themes {
 		if err = theme.CopyFiles(theme); err != nil {
-			break
+			break Application
 		}
 
 		for _, plugin := range theme.GetPlugins() {
 			if err = plugin.CopyFiles(plugin); err != nil {
-				break
+				break Application
 			}
 		}
 	}
