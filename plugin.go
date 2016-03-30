@@ -1,6 +1,7 @@
 package app
 
 import (
+	"errors"
 	"html/template"
 	"os"
 	"path/filepath"
@@ -88,8 +89,23 @@ func (plugin *Plugin) EnableOption(name string) error {
 	return nil
 }
 
-func (plugin *Plugin) DisableOption(name string) error {
-	return nil
+func (plugin *Plugin) DisableOption(name string) (err error) {
+	var found bool
+	var options []string
+
+	for _, option := range plugin.Options {
+		if name != option {
+			options = append(options, option)
+		} else {
+			found = true
+		}
+	}
+	plugin.Options = options
+
+	if found {
+		return nil
+	}
+	return errors.New("option not enabled")
 }
 
 func (*Plugin) CopyFiles(plugin PluginInterface) error {
