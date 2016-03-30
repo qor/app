@@ -13,6 +13,7 @@ type ConfigureQorPluginInterface interface {
 }
 
 type PluginInterface interface {
+	Initialize(PluginInterface)
 	GetName() string
 	EnableOption(name string) error
 	DisableOption(name string) error
@@ -30,6 +31,16 @@ type Plugin struct {
 	TemplatesPath string
 	Options       []string
 	Theme         ThemeInterface
+}
+
+func (plugin *Plugin) Initialize(p PluginInterface) {
+	if p.GetName() == "" {
+		plugin.Name = reflect.ValueOf(p).Elem().Type().Name()
+	}
+
+	if p.GetTemplatesPath() == "" {
+		plugin.TemplatesPath = filepath.Join(reflect.ValueOf(p).Elem().Type().PkgPath(), "templates")
+	}
 }
 
 func (plugin *Plugin) GetName() string {

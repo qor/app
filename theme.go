@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 )
 
@@ -13,6 +14,7 @@ type ConfigureQorThemeInterface interface {
 }
 
 type ThemeInterface interface {
+	Initialize(ThemeInterface)
 	GetName() string
 	GetPath() string
 	GetTemplatesPath() string
@@ -20,7 +22,7 @@ type ThemeInterface interface {
 	Build(ThemeInterface) error
 	GetApplication() *Application
 	SetApplication(*Application)
-	UsePlugin(plugin PluginInterface)
+	UsePlugin(PluginInterface)
 	GetPlugins() []PluginInterface
 	GetPlugin(name string) PluginInterface
 	FuncMap() template.FuncMap
@@ -32,6 +34,16 @@ type Theme struct {
 	TemplatesPath string
 	Application   *Application
 	Plugins       []PluginInterface
+}
+
+func (theme *Theme) Initialize(t ThemeInterface) {
+	if t.GetName() == "" {
+		theme.Name = reflect.ValueOf(t).Elem().Type().Name()
+	}
+
+	if t.GetTemplatesPath() == "" {
+		theme.TemplatesPath = filepath.Join(reflect.ValueOf(t).Elem().Type().PkgPath(), "templates")
+	}
 }
 
 func (theme *Theme) GetName() string {
@@ -79,6 +91,7 @@ func (theme *Theme) SetApplication(app *Application) {
 // Theme Plugins
 func (theme *Theme) UsePlugin(plugin PluginInterface) {
 	plugin.SetTheme(theme)
+	plugin.Initialize(plugin)
 
 	if configor, ok := plugin.(ConfigureQorPluginInterface); ok {
 		configor.ConfigureQorPlugin(plugin)

@@ -17,6 +17,7 @@ func New(name string) *Application {
 
 func (app *Application) Use(theme ThemeInterface) ThemeInterface {
 	theme.SetApplication(app)
+	theme.Initialize(theme)
 
 	if configor, ok := theme.(ConfigureQorThemeInterface); ok {
 		configor.ConfigureQorTheme(theme)

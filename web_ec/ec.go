@@ -13,13 +13,6 @@ type EC struct {
 	app.Theme
 }
 
-func (ec *EC) GetTemplatesPath() string {
-	if ec.TemplatesPath == "" {
-		ec.TemplatesPath = "github.com/qor/app/web_ec/templates"
-	}
-	return ec.Theme.GetTemplatesPath()
-}
-
 func (ec *EC) ConfigureQorTheme(theme app.ThemeInterface) {
 	ec.Theme.Path = ec.Path
 
