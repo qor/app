@@ -27,7 +27,15 @@ class DetailViewController: UIViewController {
         edgesForExtendedLayout = .None
         view.backgroundColor = UIColor.whiteColor()
         
+        let rightItem = UIBarButtonItem(title: "我的购物车", style: .Plain, target: self, action: #selector(goToCart))
+        navigationItem.rightBarButtonItem = rightItem
+        
         setupBasicUI()
+    }
+    
+    func goToCart() {
+        let cartVC = CartViewController()
+        navigationController!.pushViewController(cartVC, animated: true)
     }
     
     func setupBasicUI() {
@@ -50,13 +58,29 @@ class DetailViewController: UIViewController {
         cartBtn.backgroundColor = UIColor.orangeColor()
         cartBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+        cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
         
         buyBtn.setTitle("立即购买", forState: .Normal)
         buyBtn.backgroundColor = UIColor.greenColor()
         buyBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         buyBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+        buyBtn.addTarget(self, action: #selector(buy), forControlEvents: .TouchUpInside)
         
         setupConstraints()
+    }
+    
+    func addToCart() {
+        goToCart()
+    }
+    
+    func buy() {
+        let alertController = UIAlertController(title: "恭喜", message: "购买成功，回到首页", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(
+            UIAlertAction(title: "好的", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
+                self.navigationController!.popToRootViewControllerAnimated(true)
+            }
+        )
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     func setupConstraints() {
