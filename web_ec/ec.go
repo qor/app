@@ -1,6 +1,8 @@
 package web_ec
 
 import (
+	"os/exec"
+
 	"github.com/qor/app"
 	"github.com/qor/app/modules/cart"
 	"github.com/qor/app/modules/products"
@@ -28,5 +30,5 @@ func (ec *EC) ConfigureQorApplication(theme app.ThemeInterface) {
 }
 
 func (ec *EC) Build(theme app.ThemeInterface) error {
-	return nil
+	return exec.Command("gofmt", "-s", "-w", ".").Run()
 }
