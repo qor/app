@@ -18,7 +18,8 @@ go run application.go
 go run main.go
 
 # Run iOS
-open iOS/QorDemo/QorDemo.xcworkspace
+cd $GOPATH/src/github.com/qor/app/ios_ec/templates/QorDemo
+./runSimulator.sh
 ```
 
 ## License
