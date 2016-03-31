@@ -4,6 +4,7 @@ import (
 	"{{package_path}}/app/models"
 	"github.com/qor/admin"
 	"github.com/qor/qor"
+	"github.com/qor/qor/resource"
 	"github.com/jinzhu/gorm"
 )
 
@@ -11,6 +12,13 @@ func init() {
 	API := GetAPI()
 
 	Product := API.AddResource(&models.Product{})
+	Product.FindOneHandler = func(value interface{}, metaValues *resource.MetaValues, context *qor.Context) (err error) {
+		if primaryKey := Product.GetPrimaryValue(context.Request); primaryKey != "" {
+			return context.GetDB().First(value, "code = ?", primaryKey).Error
+		}
+		return
+	}
+
 	Product.Scope(&admin.Scope{
 		Default: true,
 		Handle: func(db *gorm.DB, context *qor.Context) *gorm.DB {
