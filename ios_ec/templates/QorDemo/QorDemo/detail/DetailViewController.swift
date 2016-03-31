@@ -9,17 +9,17 @@
 import UIKit
 import Cartography
 
-class DetailViewController: UIViewController {
+class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var imgUrlStr: String?
+    var item: Phone?
     let bottomHeight:CGFloat = 50
     var bannerImgV = UIImageView(frame: CGRectZero)
-    var titleLbl = UILabel(frame: CGRectZero)
-    var descLbl = UILabel(frame: CGRectZero)
     var bottomView = UIView(frame: CGRectZero)
     var cartBtn = UIButton(type: .Custom)
     var amountLbl = UILabel(frame: CGRectZero)
     var lineV = UIView(frame: CGRectZero)
+    var tableView: UITableView?
+    var data = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,19 @@ class DetailViewController: UIViewController {
         let rightItem = UIBarButtonItem(title: "我的购物车", style: .Plain, target: self, action: #selector(goToCart))
         navigationItem.rightBarButtonItem = rightItem
         
-        setupBasicUI()
+        tableView = UITableView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height-64-bottomHeight), style: .Plain)
+        view.addSubview(tableView!)
+        tableView?.dataSource = self
+        tableView?.delegate = self
+        tableView?.showsVerticalScrollIndicator = false
+        tableView?.separatorStyle = .None
+        tableView?.backgroundColor = UIColor.clearColor()
+        
+        let headV = UIView(frame: CGRectMake(0,0,CGRectGetWidth(tableView!.frame), 200))
+        tableView!.tableHeaderView = headV
+        headV.addSubview(bannerImgV)
+        
+        setupBottomView()
     }
     
     func goToCart() {
@@ -40,26 +52,15 @@ class DetailViewController: UIViewController {
         navigationController!.pushViewController(cartVC, animated: true)
     }
     
-    func setupBasicUI() {
+    func setupBottomView() {
         
         view.addSubview(bottomView)
-        view.addSubview(bannerImgV)
-        view.addSubview(titleLbl)
-        view.addSubview(descLbl)
         bottomView.addSubview(lineV)
         bottomView.addSubview(cartBtn)
         bottomView.addSubview(amountLbl)
         
         lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
-        
-        titleLbl.font = UIFont.boldSystemFontOfSize(15)
-        titleLbl.textColor = UIColor.blackColor()
-        titleLbl.text = "商品介绍"
-        
-        descLbl.numberOfLines = 0
-        descLbl.textColor = UIColor.lightGrayColor()
-        descLbl.font = UIFont.systemFontOfSize(13)
-        descLbl.text = "优点 \n1.指纹解锁确实很快\n2.外观秀气，精致，别出心裁的原型话筒\n3.屏幕触摸灵敏，虽然像素和色彩有些差，考虑到价钱方面还是蛮好的\n4.系统流畅，操作不卡顿，打开软件反应不慢\n5.冷藏室实用啊"
+        bottomView.backgroundColor = UIColor.whiteColor()
         
         cartBtn.setTitle("加入购物车", forState: .Normal)
         cartBtn.backgroundColor = UIColor.orangeColor()
@@ -132,38 +133,96 @@ class DetailViewController: UIViewController {
             b.top == b.superview!.top
             b.width == b.height
             b.centerX == b.superview!.centerX
-            b.height == 200
-        }
-        
-        constrain(titleLbl, bannerImgV) { (t, b) in
-            t.top == b.bottom + 20
-        }
-        constrain(titleLbl) { (t) in
-            t.leading == t.superview!.leading + 20
-            t.height == 20
-        }
-        
-        constrain(descLbl, titleLbl) { (d, t) in
-            d.top == t.bottom + 15
-            d.centerX == d.superview!.centerX
-            d.leading == d.superview!.leading + 20
-        }
-        
-        constrain(descLbl, bottomView) { (d, b) in
-            d.bottom == b.top - 20
+            b.height == b.superview!.height
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let str = imgUrlStr {
+        if let str = item!.imageUrlStr {
             bannerImgV.kf_setImageWithURL(NSURL(string: str)!)
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 60
+        } else if indexPath.section == 1 {
+            return 40
+        } else {
+            return 140
+        }
     }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "商品名称"
+        } else if section == 1 {
+            return "商品价格"
+        } else {
+            return "商品描述"
+        }
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: nil)
+        if indexPath.section == 0 {
+            let titleLbl = UILabel(frame: CGRectZero)
+            cell.contentView.addSubview(titleLbl)
+            titleLbl.text = item!.title
+            
+            titleLbl.font = UIFont.systemFontOfSize(15)
+            titleLbl.textColor = UIColor.blackColor()
+            titleLbl.numberOfLines = 0
+            
+            constrain(titleLbl, block: { (t) in
+               
+                t.edges == inset(t.superview!.edges, 5, 20, 5, 20)
+            })
+            
+        } else if indexPath.section == 1 {
+            let priceLbl = UILabel(frame: cell.contentView.bounds)
+            cell.contentView.addSubview(priceLbl)
+            priceLbl.text = "￥ \(item!.price)"
+            
+            priceLbl.textColor = UIColor.orangeColor()
+            priceLbl.font = UIFont.systemFontOfSize(16)
+            
+            constrain(priceLbl, block: { (p) in
+                
+                p.edges == inset(p.superview!.edges, 15, 20, 15, 20)
+            })
+
+            
+        } else {
+            
+            let descLbl = UILabel(frame: CGRectZero)
+            cell.contentView.addSubview(descLbl)
+            
+            constrain(descLbl, block: { (d) in
+                d.leading == d.superview!.leading + 20
+                d.trailing == d.superview!.trailing - 20
+                d.top == d.superview!.top + 15
+                d.bottom == d.superview!.bottom - 15
+            })
+    
+            descLbl.numberOfLines = 0
+            descLbl.textColor = UIColor.lightGrayColor()
+            descLbl.font = UIFont.systemFontOfSize(13)
+            descLbl.text = "优点 \n1.指纹解锁确实很快\n2.外观秀气，精致，别出心裁的原型话筒\n3.屏幕触摸灵敏，虽然像素和色彩有些差，考虑到价钱方面还是蛮好的\n4.系统流畅，操作不卡顿，打开软件反应不慢\n5.冷藏室实用啊"
+        }
+        
+        return cell
+    }
+
 }
