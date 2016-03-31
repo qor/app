@@ -22,7 +22,7 @@ func init() {
 	case "mysql":
 		DB, err = gorm.Open(DBConfig.Adapter, fmt.Sprintf("%v:%v@%v/%v?charset=utf8&parseTime=True", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
 	case "postgres":
-		DB, err = gorm.Open(DBConfig.Adapter, fmt.Sprintf("postgres://%v:%v@localhost/%v?sslmode=verify-full", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
+		DB, err = gorm.Open(DBConfig.Adapter, fmt.Sprintf("postgres://%v:%v@%v/%v?sslmode=verify-full", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
 	}
 
 	if err != nil {

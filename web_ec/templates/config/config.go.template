@@ -13,7 +13,7 @@ var Config = struct {
 		Adapter  string `default:"sqlite"`
 		User     string
 		Password string
-		Host     string `default:"localhost"`
+		Host     string
 	}
 }{}
 
