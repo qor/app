@@ -2,15 +2,47 @@ package models
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/qor/l10n"
+	"github.com/qor/media_library"
+	{{if has_option "l10n"}}"github.com/qor/l10n"{{end}}
 )
 
 type Product struct {
 	gorm.Model
-	Name string
-	Code string
+	Name        string
+	Code        string
+	MadeCountry string  {{if has_option "l10n" }}`l10n:"sync"`{{end}}
+	Price       float32 {{if has_option "l10n" }}`l10n:"sync"`{{end}}
+	Description string `sql:"size:2000"`
+
+	ColorVariations []ColorVariation {{if has_option "l10n" }}`l10n:"sync"`{{end}}
 
 	{{if has_option "l10n" -}}
 	l10n.Locale
 	{{- end}}
+}
+
+type ColorVariation struct {
+	gorm.Model
+	ProductID      uint
+	Product        Product
+	ColorID        uint
+	Color          Color
+	ColorCode      string
+	Images         []ColorVariationImage
+	SizeVariations []SizeVariation
+}
+
+type SizeVariation struct {
+	gorm.Model
+	ColorVariationID  uint
+	ColorVariation    ColorVariation
+	SizeID            uint
+	Size              Size
+	AvailableQuantity uint
+}
+
+type ColorVariationImage struct {
+	gorm.Model
+	ColorVariationID uint
+	Image            media_library.FileSystem
 }

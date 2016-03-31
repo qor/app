@@ -1,0 +1,16 @@
+package models
+
+import (
+	"github.com/jinzhu/gorm"
+	{{if has_option "l10n"}}"github.com/qor/l10n"{{end}}
+)
+
+type Color struct {
+	gorm.Model
+	Name string
+	Code string {{if has_option "l10n" }}`l10n:"sync"`{{end}}
+
+	{{if has_option "l10n" -}}
+	l10n.Locale
+	{{- end}}
+}
