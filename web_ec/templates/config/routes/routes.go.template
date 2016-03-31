@@ -1,0 +1,15 @@
+package routes
+
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"{{package_path}}/app/controllers"
+)
+
+func Router() *http.ServeMux {
+	router := gin.Default()
+	gin.SetMode(gin.DebugMode)
+
+	router.GET("/", controllers.Index)
+}

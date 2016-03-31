@@ -124,5 +124,14 @@ func (theme *Theme) FuncMap() template.FuncMap {
 		}
 		return false
 	}
+
+	funcMap["package_path"] = func() string {
+		var pkgPath, _ = filepath.Abs(root)
+		for _, gopath := range strings.Split(os.Getenv("GOPATH"), ":") {
+			pkgPath = strings.TrimPrefix(pkgPath, filepath.Join(gopath, "src")+"/")
+		}
+		return pkgPath
+	}
+
 	return funcMap
 }
