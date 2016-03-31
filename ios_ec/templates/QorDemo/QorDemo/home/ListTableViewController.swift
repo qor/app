@@ -79,7 +79,7 @@ class ListTableViewController: UITableViewController {
         
         let model = items[indexPath.row]
         let detailVC = DetailViewController()
-        detailVC.imgUrlStr = model.imageUrlStr
+        detailVC.item = model
         
         navigationController!.pushViewController(detailVC, animated: true)
     }
