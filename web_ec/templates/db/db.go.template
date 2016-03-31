@@ -14,13 +14,18 @@ var DB *gorm.DB
 
 func init() {
 	var DBConfig = config.Config.DB
+	var err error
 
 	switch DBConfig.Adapter {
-	case "sqlite3":
-		DB, _ = gorm.Open("sqlite3", "test.db")
+	case "sqlite", "sqlite3":
+		DB, err = gorm.Open("sqlite3", DBConfig.Name + ".db")
 	case "mysql":
-		DB, _ = gorm.Open(DBConfig.Adapter, fmt.Sprintf("%v:%v@%v/%v?charset=utf8&parseTime=True", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
+		DB, err = gorm.Open(DBConfig.Adapter, fmt.Sprintf("%v:%v@%v/%v?charset=utf8&parseTime=True", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
 	case "postgres":
-		DB, _ = gorm.Open(DBConfig.Adapter, fmt.Sprintf("postgres://%v:%v@localhost/%v?sslmode=verify-full", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
+		DB, err = gorm.Open(DBConfig.Adapter, fmt.Sprintf("postgres://%v:%v@localhost/%v?sslmode=verify-full", DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Name))
+	}
+
+	if err != nil {
+		panic(err)
 	}
 }

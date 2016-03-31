@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	Application := app.New("Qor Demo")
+	Application := app.New("example")
 	theme := Application.Use(&web_ec.EC{})
 	product := theme.GetPlugin("Product")
 	product.EnableOption("l10n")

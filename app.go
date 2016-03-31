@@ -56,7 +56,13 @@ Application:
 }
 
 func (app *Application) FuncMap() template.FuncMap {
-	return app.funcMap
+	var funcMap = app.funcMap
+
+	funcMap["application_name"] = func() string {
+		return app.Name
+	}
+
+	return funcMap
 }
 
 func (app *Application) RegisterFuncMap(name string, fc interface{}) {

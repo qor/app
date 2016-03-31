@@ -9,7 +9,7 @@ var Render *render.Render
 var Config = struct {
 	Port uint `default:"7000" env:"PORT"`
 	DB   struct {
-		Name     string
+		Name     string `default:"{{application_name}}"`
 		Adapter  string `default:"sqlite"`
 		User     string
 		Password string
