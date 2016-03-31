@@ -1,0 +1,42 @@
+package api
+
+import (
+	"{{package_path}}/app/models"
+	"github.com/qor/admin"
+	"github.com/qor/qor"
+	"github.com/jinzhu/gorm"
+)
+
+func init() {
+	API := GetAPI()
+
+	Product := API.AddResource(&models.Product{})
+	Product.Scope(&admin.Scope{
+		Default: true,
+		Handle: func(db *gorm.DB, context *qor.Context) *gorm.DB {
+			return db.Preload("ColorVariations.Images")
+		},
+	})
+
+	Product.Meta(&admin.Meta{Name: "MainImage", Valuer: func(product interface{}, context *qor.Context) interface{} {
+		for _, colorVariation := range product.(*models.Product).ColorVariations {
+			for _, image := range colorVariation.Images {
+				return image.Image.URL()
+			}
+		}
+		return ""
+	}})
+	Product.IndexAttrs("ID", "Name", "Code", "Price", "Description", "MainImage", "ColorVariations")
+	Product.ShowAttrs("Name", "Code", "Price", "Description", "MainImage", "ColorVariations")
+
+	ColorVariationMeta := Product.Meta(&admin.Meta{Name: "ColorVariations"})
+	ColorVariation := ColorVariationMeta.Resource
+	ColorVariation.IndexAttrs("ID", "Color", "Images", "SizeVariations")
+	ColorVariation.ShowAttrs("Color", "Images", "SizeVariations")
+
+	SizeVariationMeta := ColorVariation.Meta(&admin.Meta{Name: "SizeVariations"})
+	SizeVariation := SizeVariationMeta.Resource
+	SizeVariation.Meta(&admin.Meta{Name: "SKU", FieldName: "ID"})
+	SizeVariation.IndexAttrs("SKU", "Size", "AvailableQuantity")
+	SizeVariation.ShowAttrs("SKU", "Size", "AvailableQuantity")
+}

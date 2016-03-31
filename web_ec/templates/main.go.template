@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"{{package_path}}/config/routes"
+	"{{package_path}}/config/api"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 	)
 
 	mux.Handle("/", routes.GetRouter())
+	api.API.MountTo("/api", mux)
 
 	fmt.Printf("Listening on: %v\n", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux); err != nil {
