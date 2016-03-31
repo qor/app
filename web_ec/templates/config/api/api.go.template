@@ -1,0 +1,16 @@
+package api
+
+import (
+	"github.com/qor/admin"
+	"{{package_path}}/db"
+	"github.com/qor/qor"
+)
+
+var API *admin.Admin
+
+func GetAPI() *admin.Admin {
+	if API == nil {
+		API = admin.New(&qor.Config{DB: db.DB})
+	}
+	return API
+}
