@@ -1,0 +1,8 @@
+package routes
+
+import "{{package_path}}/app/controllers"
+
+func init() {
+	GetRouter().GET("/products", controllers.ProductIndex)
+	GetRouter().GET("/products/:code", controllers.ProductShow)
+}

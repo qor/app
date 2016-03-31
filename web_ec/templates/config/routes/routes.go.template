@@ -1,17 +1,16 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"{{package_path}}/app/controllers"
+  "{{package_path}}/app/controllers"
 )
 
-func Router() *http.ServeMux {
-	router := gin.Default()
-	router.GET("/", controllers.Index)
+var router = gin.Default()
 
-	var mux = http.NewServeMux()
-	mux.Handle("/", router)
-	return mux
+func GetRouter() *gin.Engine {
+	return router
+}
+
+func init() {
+  GetRouter().GET("/", controllers.Index)
 }

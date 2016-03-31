@@ -1,0 +1,22 @@
+package controllers
+
+import (
+	"net/http"
+	"github.com/gin-gonic/gin"
+	"{{package_path}}/app/models"
+	"{{package_path}}/db"
+)
+
+func ProductIndex(c *gin.Context) {
+	var products []models.Product
+	db.DB.Preload("ColorVariations.Images").Preload("ColorVariations.SizeVariations").Find(&products)
+
+	c.JSON(http.StatusOK, products)
+}
+
+func ProductShow(c *gin.Context) {
+	var product models.Product
+	db.DB.Preload("ColorVariations.Images").Preload("ColorVariations.SizeVariations").Find(&product, "code = ?", c.Param("code"))
+
+	c.JSON(http.StatusOK, product)
+}
