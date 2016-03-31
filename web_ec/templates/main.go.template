@@ -17,7 +17,7 @@ func main() {
 
 	mux.Handle("/", routes.GetRouter())
 	api.GetAPI().MountTo("/api", mux)
-	admin.GetAdmin().MountTo("/api", mux)
+	admin.GetAdmin().MountTo("/admin", mux)
 
 	fmt.Printf("Listening on: %v\n", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), mux); err != nil {

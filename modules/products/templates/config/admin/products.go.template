@@ -1,4 +1,4 @@
-package api
+package admin
 
 import (
 	"{{package_path}}/app/models"
@@ -7,5 +7,5 @@ import (
 func init() {
 	Admin := GetAdmin()
 
-	Product := Admin.AddResource(&models.Product{})
+	Admin.AddResource(&models.Product{})
 }
