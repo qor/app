@@ -5,12 +5,20 @@ Qor Application Generator
 ## Usage
 
 ```sh
+# Prepare ENV
 cd $GOPATH/src/github.com/qor
 git clone git@github.com:theplant/qor-app-generator.git
 mv qor-app-generator app
 
+# Generate Applications
 cd $GOPATH/src/github.com/qor/app/example
 go run application.go
+
+# Run WEB
+go run main.go
+
+# Run iOS
+open iOS/QorDemo/QorDemo.xcworkspace
 ```
 
 ## License
