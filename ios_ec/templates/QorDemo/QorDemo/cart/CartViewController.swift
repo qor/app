@@ -19,6 +19,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     var totalPriceLbl = UILabel(frame: CGRectZero)
     var buyBtn = UIButton(type: .Custom)
     var currentTotalPrice = 0.00
+    var lineV = UIView(frame: CGRectZero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +49,11 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func setupBottomView() {
         bottomView.backgroundColor = UIColor.whiteColor()
+        bottomView.addSubview(lineV)
         bottomView.addSubview(buyBtn)
         bottomView.addSubview(totalPriceLbl)
+        
+        lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
         
         buyBtn.backgroundColor = UIColor.orangeColor()
         buyBtn.setTitle("结算", forState: .Normal)
@@ -58,6 +62,13 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         buyBtn.addTarget(self, action: #selector(calcTotalPrice), forControlEvents: .TouchUpInside)
         
         updatePriceWithStr("0.0")
+        
+        constrain(lineV) { (l) in
+            l.height == 1
+            l.leading == l.superview!.leading
+            l.trailing == l.superview!.trailing
+            l.top == l.superview!.top
+        }
         
         constrain(buyBtn) { (b) in
             b.height == b.superview!.height

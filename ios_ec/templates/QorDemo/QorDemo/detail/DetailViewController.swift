@@ -12,12 +12,14 @@ import Cartography
 class DetailViewController: UIViewController {
     
     var imgUrlStr: String?
-
+    let bottomHeight:CGFloat = 50
     var bannerImgV = UIImageView(frame: CGRectZero)
     var titleLbl = UILabel(frame: CGRectZero)
     var descLbl = UILabel(frame: CGRectZero)
-    var buyBtn = UIButton(type: .Custom)
+    var bottomView = UIView(frame: CGRectZero)
     var cartBtn = UIButton(type: .Custom)
+    var amountLbl = UILabel(frame: CGRectZero)
+    var lineV = UIView(frame: CGRectZero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,11 +41,16 @@ class DetailViewController: UIViewController {
     }
     
     func setupBasicUI() {
+        
+        view.addSubview(bottomView)
         view.addSubview(bannerImgV)
         view.addSubview(titleLbl)
         view.addSubview(descLbl)
-        view.addSubview(cartBtn)
-        view.addSubview(buyBtn)
+        bottomView.addSubview(lineV)
+        bottomView.addSubview(cartBtn)
+        bottomView.addSubview(amountLbl)
+        
+        lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
         
         titleLbl.font = UIFont.boldSystemFontOfSize(15)
         titleLbl.textColor = UIColor.blackColor()
@@ -60,13 +67,22 @@ class DetailViewController: UIViewController {
         cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
         cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
         
-        buyBtn.setTitle("立即购买", forState: .Normal)
-        buyBtn.backgroundColor = UIColor.greenColor()
-        buyBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        buyBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
-        buyBtn.addTarget(self, action: #selector(buy), forControlEvents: .TouchUpInside)
+        updateAmountWithStr("20 件")
         
         setupConstraints()
+    }
+    
+    func updateAmountWithStr(amountStr: String) {
+        let myAttribute = [ NSFontAttributeName: UIFont.systemFontOfSize(18) ]
+        let myString = NSMutableAttributedString(string: "当前库存: ", attributes: myAttribute )
+        
+        let attrString = NSAttributedString(string: amountStr)
+        myString.appendAttributedString(attrString)
+        
+        let myRange = NSRange(location: 6, length: attrString.length)
+        myString.addAttribute(NSForegroundColorAttributeName, value: UIColor.orangeColor(), range: myRange)
+        
+        amountLbl.attributedText = myString
     }
     
     func addToCart() {
@@ -84,6 +100,33 @@ class DetailViewController: UIViewController {
     }
     
     func setupConstraints() {
+        
+        constrain(bottomView) { (b) in
+            b.height == bottomHeight
+            b.leading == b.superview!.leading
+            b.trailing == b.superview!.trailing
+            b.bottom == b.superview!.bottom
+        }
+        
+        constrain(lineV) { (l) in
+            l.height == 1
+            l.leading == l.superview!.leading
+            l.trailing == l.superview!.trailing
+            l.top == l.superview!.top
+        }
+        
+        constrain(cartBtn) { (c) in
+            c.top == c.superview!.top
+            c.bottom == c.superview!.bottom
+            c.trailing == c.superview!.trailing
+            c.width == c.superview!.width / 3
+        }
+        
+        constrain(amountLbl) { (a) in
+            a.top == a.superview!.top
+            a.bottom == a.superview!.bottom
+            a.leading == a.superview!.leading + 20
+        }
         
         constrain(bannerImgV) { (b) in
             b.top == b.superview!.top
@@ -106,19 +149,8 @@ class DetailViewController: UIViewController {
             d.leading == d.superview!.leading + 20
         }
         
-        constrain(cartBtn, descLbl) { (c, d) in
-            c.top == d.bottom + 20
-            c.width == c.superview!.width/2
-            c.height == 40
-            c.leading == c.superview!.leading
-            c.bottom == c.superview!.bottom
-        }
-        
-        constrain(buyBtn, cartBtn) { (b, c) in
-            b.width == c.width
-            b.height == c.height
-            b.top == c.top
-            b.leading == c.trailing
+        constrain(descLbl, bottomView) { (d, b) in
+            d.bottom == b.top - 20
         }
     }
     
