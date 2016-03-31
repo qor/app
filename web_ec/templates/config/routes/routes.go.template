@@ -9,7 +9,9 @@ import (
 
 func Router() *http.ServeMux {
 	router := gin.Default()
-	gin.SetMode(gin.DebugMode)
-
 	router.GET("/", controllers.Index)
+
+	var mux = http.NewServeMux()
+	mux.Handle("/", router)
+	return mux
 }

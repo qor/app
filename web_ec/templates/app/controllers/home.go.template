@@ -2,10 +2,9 @@ package controllers
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"github.com/qor/app/example/app/models"
-	"github.com/qor/app/web_ec/templates/config"
+	"{{package_path}}/app/models"
+	"{{package_path}}/config"
 )
 
 func Index(c *gin.Context) {

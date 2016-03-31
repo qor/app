@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/qor/qor-example/config/routes"
+	"{{package_path}}/config/routes"
 )
 
 func main() {
