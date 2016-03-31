@@ -1,0 +1,11 @@
+package api
+
+import (
+	"{{package_path}}/app/models"
+)
+
+func init() {
+	Admin := GetAdmin()
+
+	Product := Admin.AddResource(&models.Product{})
+}
