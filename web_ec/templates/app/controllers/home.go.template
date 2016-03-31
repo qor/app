@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"{{package_path}}/app/models"
-	"{{package_path}}/config"
+	"{{package_path}}/db"
 )
 
 func Index(c *gin.Context) {
 	var products []models.Product
-	config.DB.Find(&products)
+	db.DB.Find(&products)
 
 	c.JSON(http.StatusOK, products)
 }
