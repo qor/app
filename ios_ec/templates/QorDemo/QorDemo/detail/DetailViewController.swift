@@ -61,7 +61,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.item = model as? ProductDetail
                 self.tableView!.reloadData()
                 
-                self.bannerImgV.kf_setImageWithURL(NSURL(string: self.item!.mainImage)!)
+                self.bannerImgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(self.item!.mainImage)")!)
                 
             } else {
                 let alert = UIAlertController(title: "Network error", message: "try again?", preferredStyle: .Alert)
