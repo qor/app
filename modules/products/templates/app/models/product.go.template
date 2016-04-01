@@ -1,24 +1,35 @@
 package models
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
+	"github.com/qor/l10n"
 	"github.com/qor/media_library"
-	{{if has_option "l10n"}}"github.com/qor/l10n"{{end}}
 )
 
 type Product struct {
 	gorm.Model
 	Name        string
 	Code        string
-	MadeCountry string  {{if has_option "l10n" }}`l10n:"sync"`{{end}}
-	Price       float32 {{if has_option "l10n" }}`l10n:"sync"`{{end}}
-	Description string `sql:"size:2000"`
+	MadeCountry string  `l10n:"sync"`
+	Price       float32 `l10n:"sync"`
+	Description string  `sql:"size:2000"`
 
-	ColorVariations []ColorVariation {{if has_option "l10n" }}`l10n:"sync"`{{end}}
+	ColorVariations []ColorVariation `l10n:"sync"`
 
-	{{if has_option "l10n" -}}
 	l10n.Locale
-	{{- end}}
+}
+
+func (product Product) DefaultPath() string {
+	defaultPath := "/"
+	if len(product.ColorVariations) > 0 {
+		defaultPath = fmt.Sprintf("/products/%s_%s", product.Code, product.ColorVariations[0].ColorCode)
+	}
+	return defaultPath
+}
+
+func (product Product) MainImageUrl() string {
+	return product.ColorVariations[0].MainImageUrl()
 }
 
 type ColorVariation struct {
@@ -30,6 +41,14 @@ type ColorVariation struct {
 	ColorCode      string
 	Images         []ColorVariationImage
 	SizeVariations []SizeVariation
+}
+
+func (colorVariation ColorVariation) MainImageUrl() string {
+	imageURL := "/images/default_product.png"
+	if len(colorVariation.Images) > 0 {
+		imageURL = colorVariation.Images[0].Image.URL()
+	}
+	return imageURL
 }
 
 type SizeVariation struct {

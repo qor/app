@@ -1,8 +1,13 @@
 package widgets
 
 import (
+	"fmt"
+	qor_admin "github.com/qor/admin"
+	"{{package_path}}/app/models"
 	"{{package_path}}/config/admin"
+	"{{package_path}}/db"
 	"github.com/qor/media_library"
+	"github.com/qor/qor"
 	"github.com/qor/widget"
 )
 
@@ -37,11 +42,11 @@ func init() {
 	})
 
 	// Feature Products
-	/*type featureProductsArgument struct {
+	type featureProductsArgument struct {
 		Products []string
 	}
-	featureProductsResouce := Admin.NewResource(&featureProductsArgument{})
-	featureProductsResouce.Meta(&admin.Meta{Name: "Products", Type: "select_many", Collection: func(value interface{}, context *qor.Context) [][]string {
+	featureProductsResouce := admin.Admin.NewResource(&featureProductsArgument{})
+	featureProductsResouce.Meta(&qor_admin.Meta{Name: "Products", Type: "select_many", Collection: func(value interface{}, context *qor.Context) [][]string {
 		var collectionValues [][]string
 		var products []*models.Product
 		db.DB.Find(&products)
@@ -62,5 +67,5 @@ func init() {
 			}
 			return context
 		},
-	})*/
+	})
 }
