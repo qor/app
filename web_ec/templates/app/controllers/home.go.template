@@ -1,10 +1,10 @@
 package controllers
 
 import (
-	"net/http"
 	"github.com/gin-gonic/gin"
+	"{{package_path}}/config"
 )
 
 func Index(c *gin.Context) {
-	c.HTML(http.StatusOK, "welcome", nil)
+	config.Render.Render("index", nil, c.Request, c.Writer)
 }

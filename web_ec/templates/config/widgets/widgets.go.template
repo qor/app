@@ -1,0 +1,21 @@
+package widgets
+
+import (
+	"{{package_path}}/config"
+	"{{package_path}}/config/admin"
+	"{{package_path}}/db"
+	"github.com/qor/widget"
+)
+
+var Widget *widget.WidgetInstance
+
+func GetWidget() *widget.WidgetInstance {
+	if Widget == nil {
+		Widget = widget.New(&widget.Config{DB: db.DB})
+		admin.Admin.AddResource(Widget)
+		for key, value := range Widget.FuncMap() {
+			config.Render.RegisterFuncMap(key, value)
+		}
+	}
+	return Widget
+}
