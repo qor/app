@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
+	"github.com/qor/media_library"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -27,5 +28,7 @@ func init() {
 
 	if err != nil {
 		panic(err)
-	}
+	} else {
+		media_library.RegisterCallbacks(DB)
+    }
 }
