@@ -9,10 +9,11 @@
 import UIKit
 import Cartography
 
-class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
-    var item: Phone?
+    var item: ProductDetail?
     let bottomHeight:CGFloat = 50
+    let pickerHeight:CGFloat = 36.0 * 2
     var bannerImgV = UIImageView(frame: CGRectZero)
     var bottomView = UIView(frame: CGRectZero)
     var cartBtn = UIButton(type: .Custom)
@@ -20,6 +21,9 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var lineV = UIView(frame: CGRectZero)
     var tableView: UITableView?
     var data = []
+    let picker:UIPickerView = UIPickerView()
+    var pickerGroup = ConstraintGroup()
+    var actionSheet:UIAlertController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +49,30 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         headV.addSubview(bannerImgV)
         
         setupBottomView()
+        
+        getData()
+    }
+    
+    func getData() {
+        APIClient.sharedClient.get(path: "/products/pho-q.json", modelClass: ProductDetail.self) { (model) in
+            if !model.isError {
+                print("/products/pho-q.json parse model: \(model)")
+                
+                self.item = model as? ProductDetail
+                self.tableView!.reloadData()
+                
+                self.bannerImgV.kf_setImageWithURL(NSURL(string: self.item!.mainImage)!)
+                
+            } else {
+                let alert = UIAlertController(title: "Network error", message: "try again?", preferredStyle: .Alert)
+                let action = UIAlertAction(title: "OK", style: .Default, handler: { (a) in
+                    self.getData()
+                })
+                alert.addAction(action)
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+
+        }
     }
     
     func goToCart() {
@@ -68,7 +96,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
         cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
         
-        updateAmountWithStr("20 件")
+        updateAmountWithStr("... 件")
         
         setupConstraints()
     }
@@ -87,7 +115,8 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func addToCart() {
-        goToCart()
+        
+        goToCart()       
     }
     
     func buy() {
@@ -139,10 +168,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let str = item!.imageUrlStr {
-            bannerImgV.kf_setImageWithURL(NSURL(string: str)!)
-        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -156,7 +181,11 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 3
+        if let _ = item {
+            return 3
+        } else {
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -170,7 +199,11 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if let _ = item {
+            return 1
+        } else {
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -179,7 +212,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if indexPath.section == 0 {
             let titleLbl = UILabel(frame: CGRectZero)
             cell.contentView.addSubview(titleLbl)
-            titleLbl.text = item!.title
+            titleLbl.text = item!.name
             
             titleLbl.font = UIFont.systemFontOfSize(15)
             titleLbl.textColor = UIColor.blackColor()
@@ -219,10 +252,9 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             descLbl.numberOfLines = 0
             descLbl.textColor = UIColor.lightGrayColor()
             descLbl.font = UIFont.systemFontOfSize(13)
-            descLbl.text = "优点 \n1.指纹解锁确实很快\n2.外观秀气，精致，别出心裁的原型话筒\n3.屏幕触摸灵敏，虽然像素和色彩有些差，考虑到价钱方面还是蛮好的\n4.系统流畅，操作不卡顿，打开软件反应不慢\n5.冷藏室实用啊"
+            descLbl.text = item!.desc
         }
         
         return cell
     }
-
 }

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let listVC = ListTableViewController(style: .Plain)
         let nav = UINavigationController(rootViewController: listVC)
         window?.rootViewController = nav
+        
+        APIClient.sharedClient.createManager()
         
         return true
     }

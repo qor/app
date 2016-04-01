@@ -13,35 +13,27 @@ class ListCell: UITableViewCell {
 
     var logoImgV = UIImageView(frame: CGRectZero)
     var titleLbl = UILabel(frame: CGRectZero)
-    var amountLbl = UILabel(frame: CGRectZero)
+    var descLbl = UILabel(frame: CGRectZero)
     var priceLbl = UILabel(frame: CGRectZero)
-    var buyBtn = UIButton(type: .Custom)
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(logoImgV)
         contentView.addSubview(titleLbl)
-        contentView.addSubview(amountLbl)
+        contentView.addSubview(descLbl)
         contentView.addSubview(priceLbl)
-        contentView.addSubview(buyBtn)
         
-        titleLbl.numberOfLines = 2
+        titleLbl.numberOfLines = 1
         titleLbl.font = UIFont.boldSystemFontOfSize(16)
         titleLbl.textColor = UIColor.blackColor()
         
-        amountLbl.font = UIFont.systemFontOfSize(13)
-        amountLbl.textColor = UIColor.lightGrayColor()
+        descLbl.font = UIFont.systemFontOfSize(13)
+        descLbl.numberOfLines = 2
+        descLbl.textColor = UIColor.lightGrayColor()
         
         priceLbl.textColor = UIColor.redColor()
         priceLbl.font = UIFont.systemFontOfSize(15)
-        
-        buyBtn.layer.cornerRadius = 5
-        buyBtn.layer.borderColor = UIColor.redColor().CGColor
-        buyBtn.layer.borderWidth = 1
-        buyBtn.setTitle("立即购买", forState: .Normal)
-        buyBtn.titleLabel?.font = UIFont.systemFontOfSize(15)
-        buyBtn.setTitleColor(UIColor.blueColor(), forState: .Normal)
         
         setupConstraints()
     }
@@ -57,40 +49,39 @@ class ListCell: UITableViewCell {
         
         constrain(titleLbl) { (t) in
             t.trailing == t.superview!.trailing - 20
-            t.top == t.superview!.top + 15
+            t.top == t.superview!.top + 10
+            t.height == 20
         }
         constrain(titleLbl, logoImgV) { (t, l) in
             t.leading == l.trailing + 40
         }
         
-        constrain(amountLbl, titleLbl) { (a, t) in
-            a.top == t.bottom + 20
+        constrain(descLbl, titleLbl) { (a, t) in
+            a.top == t.bottom + 5
         }
         
-        constrain(titleLbl, amountLbl, priceLbl) { (t, a, p) in
+        constrain(titleLbl, descLbl, priceLbl) { (t, a, p) in
             align(left: t, a, p)
         }
-        
-        constrain(buyBtn) { (b) in
-            b.trailing == b.superview!.trailing - 20
-            b.bottom == b.superview!.bottom - 10
-        }
-        constrain(buyBtn, priceLbl) { (b, p) in
-            b.bottom == p.bottom
+        constrain(priceLbl) { (p) in
+            p.bottom == p.superview!.bottom - 10
         }
         
-        
+        constrain(descLbl, priceLbl) { (d, p) in
+            d.bottom == p.top
+            d.trailing == d.superview!.trailing - 10
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func refreshCellWithModel(model: Phone) {
+    func refreshCellWithModel(model: Product) {
         
-        titleLbl.text = model.title
-        amountLbl.text = "月销 \(model.amount)件"
+        titleLbl.text = model.name
+        descLbl.text = model.desc
         priceLbl.text = "￥ \(model.price)"
-        logoImgV.kf_setImageWithURL(NSURL(string: model.imageUrlStr)!)
+        logoImgV.kf_setImageWithURL(NSURL(string: model.mainImage)!)
     }
 }

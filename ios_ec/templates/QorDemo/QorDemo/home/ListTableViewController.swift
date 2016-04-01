@@ -11,7 +11,7 @@ import Kingfisher
 
 class ListTableViewController: UITableViewController {
 
-    var items :[Phone] = []
+    var items :[Product] = []
     let cellReuseStr = "ReuseStr"
 
     override func viewDidLoad() {
@@ -21,42 +21,32 @@ class ListTableViewController: UITableViewController {
         
         tableView.registerClass(ListCell.self, forCellReuseIdentifier: cellReuseStr)
         
-        if readData() {
-            tableView.reloadData()
-        }
+        getData()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+    }
+    
+    func getData() {
+        APIClient.sharedClient.get(path: "/products.json", modelClass: ItemList.self) { (model) in
+            
+            if !model.isError {
+                print("/products.json item list count: \((model as! ItemList).products.count)")
                 
-        tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0) , atScrollPosition: .Top, animated: false)
-    }
-    
-    func readData() -> Bool {
-        if let path = NSBundle.mainBundle().pathForResource("list", ofType: "json") {
-            do {
-                let jsonData = try NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe)
-                do {
-                    let jsonResult = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as! NSArray
-                    for itemObj in jsonResult {
-                        let itemDict = itemObj as! NSDictionary
-                        let item = Phone(title: itemDict["itemTitle"] as! String,
-                                        amount: itemDict["itemMonthSoldCount"] as! String,
-                                         price: itemDict["itemActPrice"] as! String,
-                                     imgUrlStr: itemDict["itemImg"] as! String)
-                        items.append(item)
-                    }
-                } catch {
-                    return false
-                }
-            } catch {
-                return false
+                self.items = (model as! ItemList).products
+                self.tableView.reloadData()
+            } else {
+                let alert = UIAlertController(title: "Network error", message: "try again?", preferredStyle: .Alert)
+                let action = UIAlertAction(title: "OK", style: .Default, handler: { (a) in
+                    self.getData()
+                })
+                alert.addAction(action)
+                self.presentViewController(alert, animated: true, completion: nil)
             }
-            return true
         }
-        return false
     }
-    
+
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 120
     }
@@ -77,9 +67,7 @@ class ListTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        let model = items[indexPath.row]
         let detailVC = DetailViewController()
-        detailVC.item = model
         
         navigationController!.pushViewController(detailVC, animated: true)
     }
