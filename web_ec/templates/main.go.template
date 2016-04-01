@@ -7,6 +7,7 @@ import (
 	"{{package_path}}/config/routes"
 	"{{package_path}}/config/api"
 	"{{package_path}}/config/admin"
+	_ "{{package_path}}/config/widgets"
 )
 
 func main() {
