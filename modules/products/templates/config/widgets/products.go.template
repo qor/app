@@ -14,11 +14,11 @@ func init() {
 	Widget := GetWidget()
 
 	// Feature Products
-	type featureProductsArgument struct {
+	type selectedProductsListArgument struct {
 		Products []string
 	}
-	featureProductsResouce := admin.Admin.NewResource(&featureProductsArgument{})
-	featureProductsResouce.Meta(&qor_admin.Meta{Name: "Products", Type: "select_many", Collection: func(value interface{}, context *qor.Context) [][]string {
+	selectedProductsListResouce := admin.Admin.NewResource(&selectedProductsListArgument{})
+	selectedProductsListResouce.Meta(&qor_admin.Meta{Name: "Products", Type: "select_many", Collection: func(value interface{}, context *qor.Context) [][]string {
 		var collectionValues [][]string
 		var products []*models.Product
 		db.DB.Find(&products)
@@ -30,11 +30,11 @@ func init() {
 	Widget.RegisterWidget(&widget.Widget{
 		Name:     "Products",
 		Template: "products",
-		Setting:  featureProductsResouce,
+		Setting:  selectedProductsListResouce,
 		Context: func(context *widget.Context, setting interface{}) *widget.Context {
 			if setting != nil {
 				var products []*models.Product
-				db.DB.Limit(9).Preload("ColorVariations").Preload("ColorVariations.Images").Where("id IN (?)", setting.(*featureProductsArgument).Products).Find(&products)
+				db.DB.Limit(9).Preload("ColorVariations").Preload("ColorVariations.Images").Where("id IN (?)", setting.(*selectedProductsListArgument).Products).Find(&products)
 				context.Options["Products"] = products
 			}
 			return context
