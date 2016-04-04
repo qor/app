@@ -11,6 +11,8 @@
 		5D336A041C9FB8020004B4AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D336A031C9FB8020004B4AB /* Assets.xcassets */; };
 		5D336A071C9FB8020004B4AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D336A051C9FB8020004B4AB /* LaunchScreen.storyboard */; };
 		5D6405B11CAE14ED00098029 /* ProductDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6405B01CAE14ED00098029 /* ProductDetail.swift */; };
+		5D962E951CB2C23E00951A43 /* PopupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D962E941CB2C23E00951A43 /* PopupController.swift */; };
+		5D962E981CB2E07200951A43 /* ChooseBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D962E971CB2E07200951A43 /* ChooseBtn.swift */; };
 		5DD0E0F71CAD0055003AA101 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0E0F61CAD0055003AA101 /* APIClient.swift */; };
 		5DD0E0FB1CAD00A0003AA101 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0E0F81CAD00A0003AA101 /* BaseModel.swift */; };
 		5DD0E0FC1CAD00A0003AA101 /* EmptyObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0E0F91CAD00A0003AA101 /* EmptyObject.swift */; };
@@ -38,6 +40,8 @@
 		5D336A061C9FB8020004B4AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5D336A081C9FB8020004B4AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D6405B01CAE14ED00098029 /* ProductDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductDetail.swift; sourceTree = "<group>"; };
+		5D962E941CB2C23E00951A43 /* PopupController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupController.swift; sourceTree = "<group>"; };
+		5D962E971CB2E07200951A43 /* ChooseBtn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseBtn.swift; sourceTree = "<group>"; };
 		5DD0E0F61CAD0055003AA101 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = APIClient.swift; path = APIClient/APIClient.swift; sourceTree = "<group>"; };
 		5DD0E0F81CAD00A0003AA101 /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseModel.swift; path = model/BaseModel.swift; sourceTree = "<group>"; };
 		5DD0E0F91CAD00A0003AA101 /* EmptyObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EmptyObject.swift; path = model/EmptyObject.swift; sourceTree = "<group>"; };
@@ -91,6 +95,7 @@
 		5D3369FB1C9FB8020004B4AB /* QorDemo */ = {
 			isa = PBXGroup;
 			children = (
+				5D962E961CB2E02C00951A43 /* Views */,
 				5DD0E0F51CAD0043003AA101 /* APIClient */,
 				5DDB4B4D1CABC96100482F01 /* home */,
 				5DDB4B4F1CABC96A00482F01 /* detail */,
@@ -103,6 +108,14 @@
 				5DDB4B5E1CABD77A00482F01 /* Cart.json */,
 			);
 			path = QorDemo;
+			sourceTree = "<group>";
+		};
+		5D962E961CB2E02C00951A43 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5D962E971CB2E07200951A43 /* ChooseBtn.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		5DD0E0F51CAD0043003AA101 /* APIClient */ = {
@@ -152,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				5DDB4B541CABC99500482F01 /* DetailViewController.swift */,
+				5D962E941CB2C23E00951A43 /* PopupController.swift */,
 			);
 			name = detail;
 			sourceTree = "<group>";
@@ -301,12 +315,14 @@
 				5DD0E1031CAD0C76003AA101 /* Product.swift in Sources */,
 				5DD0E1071CAD0C9D003AA101 /* Image.swift in Sources */,
 				5DD0E1091CAD0CA7003AA101 /* SizeVariation.swift in Sources */,
+				5D962E981CB2E07200951A43 /* ChooseBtn.swift in Sources */,
 				5DDB4B5D1CABD68600482F01 /* Goods.swift in Sources */,
 				5DD0E1011CAD054B003AA101 /* ColorVariation.swift in Sources */,
 				5DD0E0FC1CAD00A0003AA101 /* EmptyObject.swift in Sources */,
 				5DD0E0FD1CAD00A0003AA101 /* Error.swift in Sources */,
 				5DDB4B581CABC99E00482F01 /* CartTableViewCell.swift in Sources */,
 				5DD0E0FB1CAD00A0003AA101 /* BaseModel.swift in Sources */,
+				5D962E951CB2C23E00951A43 /* PopupController.swift in Sources */,
 				5DD0E0FF1CAD03DB003AA101 /* ItemList.swift in Sources */,
 				5DDB4B521CABC98A00482F01 /* ListCell.swift in Sources */,
 				5DDB4B591CABC99E00482F01 /* CartViewController.swift in Sources */,

@@ -13,12 +13,17 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var item: ProductDetail?
     let bottomHeight:CGFloat = 40
+    let popVCHeight = UIScreen.mainScreen().bounds.size.height * 0.75
     var bannerImgV = UIImageView(frame: CGRectZero)
     var cartBtn = UIButton(type: .Custom)
     var amountLbl = UILabel(frame: CGRectZero)
     var tableView: UITableView?
     var data = []
     var actionSheet:UIAlertController?
+    var popupVC: PopupController?
+    var popGroup: ConstraintGroup?
+    var shadowV = UIView(frame: CGRectZero)
+    var shadowGroup: ConstraintGroup?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +57,83 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         setupConstraints()
         
+        setupShadowView()
+        setupPopVC()
+        
         getData()
+    }
+    
+    func setupShadowView() {
+        shadowV.backgroundColor = UIColor.blackColor()
+        shadowV.alpha = 0.0
+        navigationController!.view.addSubview(shadowV)
+        
+        shadowGroup = constrain(shadowV) { (s) in
+            s.leading == s.superview!.leading
+            s.trailing == s.superview!.trailing
+            s.top == s.superview!.top
+            s.bottom == s.superview!.bottom
+        }
+        let tapGr = UITapGestureRecognizer(target: self, action: #selector(dismissPopVC))
+        shadowV.addGestureRecognizer(tapGr)
+    }
+    
+    func setupPopVC() {
+        popupVC = PopupController()
+        popupVC!.closeBlock = {self.dismissPopVC()}
+        addChildViewController(popupVC!)
+        view.addSubview(popupVC!.view)
+        popupVC!.didMoveToParentViewController(self)
+        
+        popGroup = constrain(popupVC!.view) { (v) in
+            v.width == v.superview!.width
+            v.leading == v.superview!.leading
+            v.height == popVCHeight
+            v.top == v.superview!.bottom
+        }
+    }
+    
+    private func showPopVC() {
+        
+        constrain(popupVC!.view, replace: popGroup!) { (v) in
+            v.bottom == v.superview!.bottom
+            v.leading == v.superview!.leading
+            v.trailing == v.superview!.trailing
+            v.height == popVCHeight
+        }
+        
+        constrain(shadowV, replace: shadowGroup!) { (s) in
+            s.leading == s.superview!.leading
+            s.trailing == s.superview!.trailing
+            s.top == s.superview!.top
+            s.bottom == s.superview!.bottom - popVCHeight
+        }
+        UIView.animateWithDuration(0.5, animations: navigationController!.view.layoutIfNeeded)
+        UIView.animateWithDuration(0.5, animations: {
+            self.shadowV.alpha = 0.4 * (self.view.frame.size.height - self.popupVC!.view.frame.origin.y)/self.popVCHeight
+            }) { (finished) in
+        }
+    }
+    
+    func dismissPopVC() {
+        constrain(popupVC!.view, replace: popGroup!) { (v) in
+            v.width == v.superview!.width
+            v.leading == v.superview!.leading
+            v.height == popVCHeight
+            v.top == v.superview!.bottom
+        }
+        constrain(shadowV, replace: shadowGroup!) { (s) in
+            s.leading == s.superview!.leading
+            s.trailing == s.superview!.trailing
+            s.top == s.superview!.top
+            s.bottom == s.superview!.bottom
+        }
+        
+        UIView.animateWithDuration(0.5, animations: navigationController!.view.layoutIfNeeded)
+        UIView.animateWithDuration(0.5, animations: {
+            self.shadowV.alpha = 0.4 * (self.view.frame.size.height - self.popupVC!.view.frame.origin.y)/self.popVCHeight
+        }) { (finished) in
+        }
     }
     
     func getData() {
@@ -64,6 +145,8 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.tableView!.reloadData()
                 
                 self.bannerImgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(self.item!.mainImage)")!)
+                
+                self.popupVC!.item = self.item
                 
             } else {
                 let alert = UIAlertController(title: "Network error", message: "try again?", preferredStyle: .Alert)
@@ -97,7 +180,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func addToCart() {
         
-        goToCart()       
+        showPopVC()
     }
     
     func buy() {
