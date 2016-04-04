@@ -12,17 +12,12 @@ import Cartography
 class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var item: ProductDetail?
-    let bottomHeight:CGFloat = 50
-    let pickerHeight:CGFloat = 36.0 * 2
+    let bottomHeight:CGFloat = 40
     var bannerImgV = UIImageView(frame: CGRectZero)
-    var bottomView = UIView(frame: CGRectZero)
     var cartBtn = UIButton(type: .Custom)
     var amountLbl = UILabel(frame: CGRectZero)
-    var lineV = UIView(frame: CGRectZero)
     var tableView: UITableView?
     var data = []
-    let picker:UIPickerView = UIPickerView()
-    var pickerGroup = ConstraintGroup()
     var actionSheet:UIAlertController?
     
     override func viewDidLoad() {
@@ -48,7 +43,14 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         tableView!.tableHeaderView = headV
         headV.addSubview(bannerImgV)
         
-        setupBottomView()
+        cartBtn.setTitle("Add to Cart", forState: .Normal)
+        cartBtn.backgroundColor = UIColor.orangeColor()
+        cartBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
+        cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
+        view.addSubview(cartBtn)
+        
+        setupConstraints()
         
         getData()
     }
@@ -79,28 +81,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cartVC = CartViewController()
         navigationController!.pushViewController(cartVC, animated: true)
     }
-    
-    func setupBottomView() {
-        
-        view.addSubview(bottomView)
-        bottomView.addSubview(lineV)
-        bottomView.addSubview(cartBtn)
-        bottomView.addSubview(amountLbl)
-        
-        lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
-        bottomView.backgroundColor = UIColor.whiteColor()
-        
-        cartBtn.setTitle("Add to Cart", forState: .Normal)
-        cartBtn.backgroundColor = UIColor.orangeColor()
-        cartBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
-        cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
-        
-        updateAmountWithStr("...")
-        
-        setupConstraints()
-    }
-    
+
     func updateAmountWithStr(amountStr: String) {
         let myAttribute = [ NSFontAttributeName: UIFont.systemFontOfSize(18) ]
         let myString = NSMutableAttributedString(string: "当前库存: ", attributes: myAttribute )
@@ -131,31 +112,11 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func setupConstraints() {
         
-        constrain(bottomView) { (b) in
-            b.height == bottomHeight
-            b.leading == b.superview!.leading
-            b.trailing == b.superview!.trailing
-            b.bottom == b.superview!.bottom
-        }
-        
-        constrain(lineV) { (l) in
-            l.height == 1
-            l.leading == l.superview!.leading
-            l.trailing == l.superview!.trailing
-            l.top == l.superview!.top
-        }
-        
         constrain(cartBtn) { (c) in
-            c.top == c.superview!.top
             c.bottom == c.superview!.bottom
             c.trailing == c.superview!.trailing
-            c.width == c.superview!.width / 3
-        }
-        
-        constrain(amountLbl) { (a) in
-            a.top == a.superview!.top
-            a.bottom == a.superview!.bottom
-            a.leading == a.superview!.leading + 20
+            c.leading == c.superview!.leading
+            c.height == bottomHeight
         }
         
         constrain(bannerImgV) { (b) in
