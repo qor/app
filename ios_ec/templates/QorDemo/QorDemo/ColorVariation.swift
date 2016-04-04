@@ -25,7 +25,7 @@ struct ColorVariation:BaseModel {
     var color: String
     
     var images: [Image]
-    var sizeVariation: [SizeVariation]
+    var sizeVariations: [SizeVariation]
     
     init(json: JSON) {
         id                  = json["ID"].intValue
@@ -36,9 +36,9 @@ struct ColorVariation:BaseModel {
             images.append(Image(json: obj))
         }
 
-        sizeVariation = []
+        sizeVariations = []
         for obj in json["SizeVariations"].arrayValue {
-            sizeVariation.append(SizeVariation(json: obj))
+            sizeVariations.append(SizeVariation(json: obj))
         }
     }
 }

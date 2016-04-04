@@ -20,7 +20,12 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     var buyBtn = UIButton(type: .Custom)
     var currentTotalPrice = 0.00
     var lineV = UIView(frame: CGRectZero)
+    var item: ProductDetail?
     
+    var amount: String = "0"
+    var size: String?
+    var color: String?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,7 +47,17 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(bottomView)
         setupBottomView()
         
-        if readData() {
+        if Int(amount) <= 0 {
+            let alertController = UIAlertController(title: "Blank Cart", message: "Maybe you want some goods...", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(
+                UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
+                    self.navigationController!.popToRootViewControllerAnimated(true)
+                }
+            )
+            presentViewController(alertController, animated: true, completion: nil)
+        } else {
+            let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage)
+            items.append(good)
             tableView!.reloadData()
         }
     }
@@ -150,8 +165,8 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseStr, forIndexPath: indexPath) as! CartTableViewCell
         cell.selectionStyle = .None
         let model = items[indexPath.row]
-        cell.refreshCellWithModel(model)
-                
+        cell.refreshCellWithModel(model, color: color!, size: size!)
+        
         return cell
     }
     

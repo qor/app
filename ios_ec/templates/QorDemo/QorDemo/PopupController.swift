@@ -15,6 +15,9 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     typealias simpleHandler = ()->()
     var closeBlock: simpleHandler?
     
+    typealias chooseHandler = (color: String, size: String, amount: String)->()
+    var chooseBlock: chooseHandler?
+    
     let bottomHeight:CGFloat = 40
     let imgHeight:CGFloat = 100
     var confirmBtn = UIButton(type: .Custom)
@@ -97,8 +100,8 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
             self.imgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(product.mainImage)")!)
             self.priceLbl.text = "$ \(product.price)"
             
-            if self.currentProduct?.sizeVariation.count > 0 {
-                self.currentSizeVariation = self.currentProduct?.sizeVariation.first
+            if self.currentProduct?.sizeVariations.count > 0 {
+                self.currentSizeVariation = self.currentProduct?.sizeVariations.first
                 self.amountLbl.text = "Remained: \(self.currentSizeVariation!.quantity)"
             }
             
@@ -143,6 +146,7 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .Default, reuseIdentifier: nil)
+        cell.selectionStyle = .None
         
         if indexPath.section == 0 {
             var lastBtn:UIButton?
@@ -173,7 +177,7 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
         } else if indexPath.section == 1 {
             var lastBtn:UIButton?
             var sizeIndex = 0
-            if let sizeVars = self.currentProduct?.sizeVariation {
+            if let sizeVars = self.currentProduct?.sizeVariations {
                 for sizeVara in sizeVars {
                     let btn = ChooseBtn(type: .Custom)
                     btn.setTitle(sizeVara.size, forState: .Normal)
@@ -221,8 +225,33 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
         super.viewWillAppear(animated)
     }
     
+    func showAmountAlert() {
+        let alertController = UIAlertController(title: "", message: "Amount could not be blank...", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(
+            UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
+                self.amountField.becomeFirstResponder()
+            }
+        )
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
     func confirmSelection() {
-        dismissSelf()
+        
+        let str = amountField.text
+        if str == nil {
+            showAmountAlert()
+            return
+        }
+        if Int(str!) <= 0 {
+            showAmountAlert()
+            return
+        }
+        
+        if let block = chooseBlock {
+            let colorVa = item!.colorVariations[currentColorIndex]
+            let sizeVa = self.currentProduct!.sizeVariations[currentSizeIndex]
+            block(color: colorVa.color, size: sizeVa.size, amount: amountField.text!)
+        }
     }
     
     func setupCloseBtn() {

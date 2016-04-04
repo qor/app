@@ -19,6 +19,8 @@ class CartTableViewCell: UITableViewCell {
     var amountLbl = UILabel(frame: CGRectZero)
     var checkBox = UIView(frame: CGRectZero)
     var containerView = UIView(frame: CGRectZero)
+    var colorBtn = ChooseBtn(type: .Custom)
+    var sizeBtn = ChooseBtn(type: .Custom)
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,6 +34,8 @@ class CartTableViewCell: UITableViewCell {
         containerView.addSubview(priceLbl)
         containerView.addSubview(amountLbl)
         containerView.addSubview(checkBox)
+        containerView.addSubview(colorBtn)
+        containerView.addSubview(sizeBtn)
         
         setupBasicAttibutes()
         
@@ -96,6 +100,14 @@ class CartTableViewCell: UITableViewCell {
             a.bottom == p.bottom
             a.trailing == a.superview!.trailing - 20
         }
+        
+        constrain(colorBtn, sizeBtn, imgV) { (c, s, i) in
+            c.centerY == s.centerY
+            c.centerY == i.centerY
+            
+            c.leading == i.trailing + 15
+            s.leading == c.trailing + 10
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -113,7 +125,7 @@ class CartTableViewCell: UITableViewCell {
         checkBox.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    func refreshCellWithModel(model: Goods) {
+    func refreshCellWithModel(model: Goods, color: String, size: String) {
         titleLbl.text = model.title
         amountLbl.text = "x\(model.amount)"
         priceLbl.text = "$ \(model.price)"
@@ -124,6 +136,11 @@ class CartTableViewCell: UITableViewCell {
             uncheck()
         }
         
-        imgV.kf_setImageWithURL(NSURL(string: model.imageUrlStr)!)
+        colorBtn.setTitle(color, forState: .Normal)
+        sizeBtn.setTitle(size, forState: .Normal)
+        colorBtn.isChosen = true
+        sizeBtn.isChosen = true
+        
+        imgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(model.imageUrlStr)")!)
     }
 }

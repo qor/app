@@ -24,6 +24,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var popGroup: ConstraintGroup?
     var shadowV = UIView(frame: CGRectZero)
     var shadowGroup: ConstraintGroup?
+    var cartVC = CartViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,13 +75,17 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             s.top == s.superview!.top
             s.bottom == s.superview!.bottom
         }
-        let tapGr = UITapGestureRecognizer(target: self, action: #selector(dismissPopVC))
+        let tapGr = UITapGestureRecognizer(target: self, action: #selector(tapShadow))
         shadowV.addGestureRecognizer(tapGr)
+    }
+    
+    func tapShadow() {
+        dismissPopVC(true)
     }
     
     func setupPopVC() {
         popupVC = PopupController()
-        popupVC!.closeBlock = {self.dismissPopVC()}
+        popupVC!.closeBlock = {self.dismissPopVC(true)}
         addChildViewController(popupVC!)
         view.addSubview(popupVC!.view)
         popupVC!.didMoveToParentViewController(self)
@@ -90,6 +95,19 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             v.leading == v.superview!.leading
             v.height == popVCHeight
             v.top == v.superview!.bottom
+        }
+        
+        popupVC!.chooseBlock = {(color: String, size: String, amount: String) -> () in
+            
+            print("size: \(size)")
+            self.dismissPopVC(false)
+
+            self.cartVC.item = self.item
+            self.cartVC.amount = amount
+            self.cartVC.color = color
+            self.cartVC.size = size
+            
+            self.navigationController!.pushViewController(self.cartVC, animated: true)
         }
     }
     
@@ -115,7 +133,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func dismissPopVC() {
+    func dismissPopVC(animated: Bool) {
         constrain(popupVC!.view, replace: popGroup!) { (v) in
             v.width == v.superview!.width
             v.leading == v.superview!.leading
@@ -129,8 +147,12 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
             s.bottom == s.superview!.bottom
         }
         
-        UIView.animateWithDuration(0.5, animations: navigationController!.view.layoutIfNeeded)
-        UIView.animateWithDuration(0.5, animations: {
+        var time = 0.0
+        if animated {
+            time = 0.5
+        }
+        UIView.animateWithDuration(time, animations: navigationController!.view.layoutIfNeeded)
+        UIView.animateWithDuration(time, animations: {
             self.shadowV.alpha = 0.4 * (self.view.frame.size.height - self.popupVC!.view.frame.origin.y)/self.popVCHeight
         }) { (finished) in
         }
@@ -161,7 +183,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func goToCart() {
-        let cartVC = CartViewController()
         navigationController!.pushViewController(cartVC, animated: true)
     }
 
