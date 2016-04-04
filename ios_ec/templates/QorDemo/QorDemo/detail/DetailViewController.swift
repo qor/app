@@ -29,11 +29,11 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        title = "商品详情"
+        title = "Product Detail"
         edgesForExtendedLayout = .None
         view.backgroundColor = UIColor.whiteColor()
         
-        let rightItem = UIBarButtonItem(title: "我的购物车", style: .Plain, target: self, action: #selector(goToCart))
+        let rightItem = UIBarButtonItem(title: "My Cart", style: .Plain, target: self, action: #selector(goToCart))
         navigationItem.rightBarButtonItem = rightItem
         
         tableView = UITableView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, UIScreen.mainScreen().bounds.size.height-64-bottomHeight), style: .Plain)
@@ -90,13 +90,13 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
         bottomView.backgroundColor = UIColor.whiteColor()
         
-        cartBtn.setTitle("加入购物车", forState: .Normal)
+        cartBtn.setTitle("Add to Cart", forState: .Normal)
         cartBtn.backgroundColor = UIColor.orangeColor()
         cartBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         cartBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(16)
         cartBtn.addTarget(self, action: #selector(addToCart), forControlEvents: .TouchUpInside)
         
-        updateAmountWithStr("... 件")
+        updateAmountWithStr("...")
         
         setupConstraints()
     }
@@ -190,11 +190,11 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "商品名称"
+            return "Product Name"
         } else if section == 1 {
-            return "商品价格"
+            return "Product Price"
         } else {
-            return "商品描述"
+            return "Product Description"
         }
     }
     
@@ -226,14 +226,14 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
         } else if indexPath.section == 1 {
             let priceLbl = UILabel(frame: cell.contentView.bounds)
             cell.contentView.addSubview(priceLbl)
-            priceLbl.text = "￥ \(item!.price)"
+            priceLbl.text = "$ \(item!.price)"
             
             priceLbl.textColor = UIColor.orangeColor()
             priceLbl.font = UIFont.systemFontOfSize(16)
             
             constrain(priceLbl, block: { (p) in
                 
-                p.edges == inset(p.superview!.edges, 15, 20, 15, 20)
+                p.edges == inset(p.superview!.edges, 10, 20, 10, 20)
             })
 
             

@@ -116,7 +116,7 @@ class CartTableViewCell: UITableViewCell {
     func refreshCellWithModel(model: Goods) {
         titleLbl.text = model.title
         amountLbl.text = "x\(model.amount)"
-        priceLbl.text = "￥ \(model.price)"
+        priceLbl.text = "$ \(model.price)"
         
         if model.isChecked {
             highlightCheck()

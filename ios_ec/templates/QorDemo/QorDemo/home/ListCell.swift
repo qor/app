@@ -81,7 +81,7 @@ class ListCell: UITableViewCell {
         
         titleLbl.text = model.name
         descLbl.text = model.desc
-        priceLbl.text = "￥ \(model.price)"
+        priceLbl.text = "$ \(model.price)"
         logoImgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(model.mainImage)")!)
     }
 }

@@ -24,7 +24,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "我的购物车"
+        title = "My Shopping Cart"
         view.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
         edgesForExtendedLayout = .None
         
@@ -56,7 +56,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
         
         buyBtn.backgroundColor = UIColor.orangeColor()
-        buyBtn.setTitle("结算", forState: .Normal)
+        buyBtn.setTitle("Calculate", forState: .Normal)
         buyBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         buyBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(15)
         buyBtn.addTarget(self, action: #selector(calcTotalPrice), forControlEvents: .TouchUpInside)
@@ -86,21 +86,21 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func updatePriceWithStr(priceStr: String) {
         let myAttribute = [ NSFontAttributeName: UIFont.systemFontOfSize(18) ]
-        let myString = NSMutableAttributedString(string: "总价: ", attributes: myAttribute )
+        let myString = NSMutableAttributedString(string: "Total Price: ", attributes: myAttribute )
         
         let attrString = NSAttributedString(string: priceStr)
         myString.appendAttributedString(attrString)
         
-        let myRange = NSRange(location: 4, length: attrString.length)
+        let myRange = NSRange(location: "Total Price: ".length, length: attrString.length)
         myString.addAttribute(NSForegroundColorAttributeName, value: UIColor.orangeColor(), range: myRange)
         
         totalPriceLbl.attributedText = myString
     }
     
     func calcTotalPrice() {
-        let alertController = UIAlertController(title: "恭喜", message: "购买成功，回到首页", preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController = UIAlertController(title: "Congratulations", message: "Buying succeed，Continue...", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
-            UIAlertAction(title: "好的", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
+            UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
                 self.navigationController!.popToRootViewControllerAnimated(true)
             }
         )

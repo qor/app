@@ -17,7 +17,7 @@ class ListTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "商品列表"
+        title = "Product List"
         
         tableView.registerClass(ListCell.self, forCellReuseIdentifier: cellReuseStr)
         
