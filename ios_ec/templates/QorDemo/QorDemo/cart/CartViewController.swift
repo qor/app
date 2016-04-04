@@ -71,7 +71,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         lineV.backgroundColor = UIColor(red: 234/255.0, green: 234/255.0, blue: 234/255.0, alpha: 1)
         
         buyBtn.backgroundColor = UIColor.orangeColor()
-        buyBtn.setTitle("Calculate", forState: .Normal)
+        buyBtn.setTitle("Paying", forState: .Normal)
         buyBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         buyBtn.titleLabel?.font = UIFont.boldSystemFontOfSize(15)
         buyBtn.addTarget(self, action: #selector(calcTotalPrice), forControlEvents: .TouchUpInside)

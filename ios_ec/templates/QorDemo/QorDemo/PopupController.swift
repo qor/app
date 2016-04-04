@@ -23,7 +23,8 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     var confirmBtn = UIButton(type: .Custom)
     var imgV = UIImageView(frame: CGRectZero)
     var priceLbl = UILabel(frame: CGRectZero)
-    var amountLbl = UILabel(frame: CGRectZero)
+    var remainedLbl = UILabel(frame: CGRectZero)
+    var remainedCount = 0
     var tableView: UITableView?
     var item: ProductDetail? {
         didSet {
@@ -35,7 +36,7 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     
     var currentColorIndex: Int = 0
     var currentSizeIndex: Int = 0
-    let amountField = UITextField(frame: CGRectZero)
+    var amountLbl:UILabel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +72,8 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
             p.bottom == i.centerY - 2.5
         }
         
-        view.addSubview(amountLbl)
-        constrain(amountLbl, priceLbl) { (a, p) in
+        view.addSubview(remainedLbl)
+        constrain(remainedLbl, priceLbl) { (a, p) in
             a.leading == p.leading
             a.top == p.bottom + 5
         }
@@ -102,7 +103,8 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
             
             if self.currentProduct?.sizeVariations.count > 0 {
                 self.currentSizeVariation = self.currentProduct?.sizeVariations.first
-                self.amountLbl.text = "Remained: \(self.currentSizeVariation!.quantity)"
+                self.remainedLbl.text = "Remained: \(self.currentSizeVariation!.quantity)"
+                self.remainedCount = self.currentSizeVariation!.quantity
             }
             
             self.tableView?.reloadData()
@@ -209,15 +211,58 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
             
             cell.textLabel?.text = "Buy amount:"
             
-            amountField.placeholder = "Enter amount"
-            cell.contentView.addSubview(amountField)
-            constrain(amountField) { (a) in
-                a.trailing == a.superview!.trailing - 10
-                a.centerY == a.superview!.centerY
-            }
+            let leftBtn = UIButton(type: .Custom)
+            let rightBtn = UIButton(type: .Custom)
+            let lbl = UILabel(frame: CGRectZero)
+            cell.contentView.addSubview(leftBtn)
+            cell.contentView.addSubview(rightBtn)
+            cell.contentView.addSubview(lbl)
+            
+            let bg = UIColor(red: 244/255.0, green: 244/255.0, blue: 244/255.0, alpha: 1)
+            leftBtn.backgroundColor = bg
+            rightBtn.backgroundColor = bg
+            lbl.backgroundColor = bg
+            lbl.text = "0"
+            lbl.textAlignment = .Center
+            leftBtn.setTitle(" - ", forState: .Normal)
+            leftBtn.setTitleColor(UIColor.brownColor(), forState: .Normal)
+            rightBtn.setTitleColor(UIColor.brownColor(), forState: .Normal)
+            rightBtn.setTitle(" + ", forState: .Normal)
+            amountLbl = lbl
+            rightBtn.addTarget(self, action: #selector(increaseAmount), forControlEvents: .TouchUpInside)
+            leftBtn.addTarget(self, action: #selector(decreaseAmount), forControlEvents: .TouchUpInside)
+            
+            constrain(leftBtn, rightBtn, lbl, block: { (l, r, m) in
+                r.centerY == r.superview!.centerY
+                m.centerY == r.centerY
+                l.centerY == r.centerY
+                
+                r.trailing == r.superview!.trailing - 10
+                m.trailing == r.leading - 10
+                l.trailing == m.leading - 10
+                l.width == m.width
+                m.width == r.width
+                
+                l.height == m.height
+                m.height == r.height
+                
+                m.top == m.superview!.top + 5
+            })
         }
 
         return cell
+    }
+    
+    func increaseAmount() {
+        if Int(amountLbl!.text!)! < remainedCount {
+            amountLbl?.text = "\(1 + Int(amountLbl!.text!)!)"
+        }
+    }
+    
+    func decreaseAmount() {
+        if Int(amountLbl!.text!)! > 0 {
+            amountLbl?.text = "\(-1 + Int(amountLbl!.text!)!)"
+        }
     }
     
     
@@ -226,10 +271,9 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     }
     
     func showAmountAlert() {
-        let alertController = UIAlertController(title: "", message: "Amount could not be blank...", preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController = UIAlertController(title: "", message: "Amount could not be 0", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(
             UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
-                self.amountField.becomeFirstResponder()
             }
         )
         presentViewController(alertController, animated: true, completion: nil)
@@ -237,12 +281,7 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
     
     func confirmSelection() {
         
-        let str = amountField.text
-        if str == nil {
-            showAmountAlert()
-            return
-        }
-        if Int(str!) <= 0 {
+        if Int(amountLbl!.text!)! <= 0 {
             showAmountAlert()
             return
         }
@@ -250,7 +289,7 @@ class PopupController: UIViewController, UITableViewDataSource, UITableViewDeleg
         if let block = chooseBlock {
             let colorVa = item!.colorVariations[currentColorIndex]
             let sizeVa = self.currentProduct!.sizeVariations[currentSizeIndex]
-            block(color: colorVa.color, size: sizeVa.size, amount: amountField.text!)
+            block(color: colorVa.color, size: sizeVa.size, amount: amountLbl!.text!)
         }
     }
     
