@@ -162,7 +162,6 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func getData() {
         APIClient.sharedClient.get(path: "/products/\(product!.code).json", modelClass: ProductDetail.self) { (model) in
             if !model.isError {
-                print("/products/pho-q.json parse model: \(model)")
                 
                 self.item = model as? ProductDetail
                 self.tableView!.reloadData()

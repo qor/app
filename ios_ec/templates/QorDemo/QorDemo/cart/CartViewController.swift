@@ -47,10 +47,16 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(bottomView)
         setupBottomView()
         
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        syncData()
+    }
+    
+    func syncData() {
         readCartFile()
-
-        print("items: \(items)")
-        
+                
         if Int(amount) <= 0 && items.count == 0 {
             let alertController = UIAlertController(title: "Blank Cart", message: "Maybe you want some goods...", preferredStyle: UIAlertControllerStyle.Alert)
             alertController.addAction(
@@ -64,9 +70,8 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage, color: color!, size: size!)
                 items.append(good)
                 tableView!.reloadData()
-                
                 writeCartFile()
-
+                
             }
         }
     }
@@ -78,10 +83,12 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     func readCartFile() {
         let arr = NSArray(contentsOfFile: cartFilePath())
+        items.removeAll()
         if let arrCart = arr {
             for dict in arrCart {
                 let dicc = dict as! [String: String]
-                let good = Goods(title: dicc["name"]!, amount: dicc["amount"]!, price: dicc["price"]!, imgUrlStr: dicc["mainImage"]!, color: dicc["color"]!, size: dicc["size"]!)
+                var good = Goods(title: dicc["name"]!, amount: dicc["amount"]!, price: dicc["price"]!, imgUrlStr: dicc["mainImage"]!, color: dicc["color"]!, size: dicc["size"]!)
+                good.isChecked = false
                 items.append(good)
             }
         }
@@ -90,13 +97,16 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
     func writeCartFile() {
         var itemArr:[[String:String!]] = []
         for good in items {
-            let dict = ["name":good.title,
-                        "amount":good.amount,
-                        "price":good.price,
-                        "mainImage":good.imageUrlStr,
-                        "color":good.color,
-                        "size":good.size]
-            itemArr.append(dict)
+            if good.isChecked == false {
+                let dict = ["name":good.title,
+                            "amount":good.amount,
+                            "price":good.price,
+                            "mainImage":good.imageUrlStr,
+                            "color":good.color,
+                            "size":good.size]
+                itemArr.append(dict)
+
+            }
         }
         let cocoaArray : NSArray = itemArr
         cocoaArray.writeToFile(cartFilePath(), atomically: true)
@@ -159,6 +169,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.navigationController!.popToRootViewControllerAnimated(true)
             }
         )
+        writeCartFile()
         presentViewController(alertController, animated: true, completion: nil)
     }
 
