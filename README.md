@@ -15,6 +15,7 @@ cd $GOPATH/src/github.com/qor/app/example
 go run application.go
 
 # Run WEB
+cd $GOPATH/src/github.com/qor/app/example
 go run main.go
 
 # Run iOS
