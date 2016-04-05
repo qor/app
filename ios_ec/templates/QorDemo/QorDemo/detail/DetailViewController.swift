@@ -12,6 +12,7 @@ import Cartography
 class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
     var item: ProductDetail?
+    var product: Product?
     let bottomHeight:CGFloat = 40
     let popVCHeight = UIScreen.mainScreen().bounds.size.height * 0.75
     var bannerImgV = UIImageView(frame: CGRectZero)
@@ -159,7 +160,7 @@ class DetailViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func getData() {
-        APIClient.sharedClient.get(path: "/products/pho-q.json", modelClass: ProductDetail.self) { (model) in
+        APIClient.sharedClient.get(path: "/products/\(product!.code).json", modelClass: ProductDetail.self) { (model) in
             if !model.isError {
                 print("/products/pho-q.json parse model: \(model)")
                 

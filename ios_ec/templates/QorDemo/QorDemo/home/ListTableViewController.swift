@@ -68,6 +68,7 @@ class ListTableViewController: UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let detailVC = DetailViewController()
+        detailVC.product = items[indexPath.row]
         
         navigationController!.pushViewController(detailVC, animated: true)
     }
