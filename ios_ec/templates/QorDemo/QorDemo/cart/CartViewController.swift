@@ -60,11 +60,14 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
             )
             presentViewController(alertController, animated: true, completion: nil)
         } else {
-            let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage, color: color!, size: size!)
-            items.append(good)
-            tableView!.reloadData()
-            
-            writeCartFile()
+            if let _ = color {
+                let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage, color: color!, size: size!)
+                items.append(good)
+                tableView!.reloadData()
+                
+                writeCartFile()
+
+            }
         }
     }
     
