@@ -47,7 +47,11 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         view.addSubview(bottomView)
         setupBottomView()
         
-        if Int(amount) <= 0 {
+        readCartFile()
+
+        print("items: \(items)")
+        
+        if Int(amount) <= 0 && items.count == 0 {
             let alertController = UIAlertController(title: "Blank Cart", message: "Maybe you want some goods...", preferredStyle: UIAlertControllerStyle.Alert)
             alertController.addAction(
                 UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (dd) -> Void in
@@ -56,10 +60,43 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
             )
             presentViewController(alertController, animated: true, completion: nil)
         } else {
-            let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage)
+            let good = Goods(title: item!.name, amount: amount, price: "\(item!.price)", imgUrlStr: item!.mainImage, color: color!, size: size!)
             items.append(good)
             tableView!.reloadData()
+            
+            writeCartFile()
         }
+    }
+    
+    func cartFilePath() -> String {
+        let str = NSHomeDirectory()
+        return "\(str)/Documents/cart.plist"
+    }
+
+    func readCartFile() {
+        let arr = NSArray(contentsOfFile: cartFilePath())
+        if let arrCart = arr {
+            for dict in arrCart {
+                let dicc = dict as! [String: String]
+                let good = Goods(title: dicc["name"]!, amount: dicc["amount"]!, price: dicc["price"]!, imgUrlStr: dicc["mainImage"]!, color: dicc["color"]!, size: dicc["size"]!)
+                items.append(good)
+            }
+        }
+    }
+    
+    func writeCartFile() {
+        var itemArr:[[String:String!]] = []
+        for good in items {
+            let dict = ["name":good.title,
+                        "amount":good.amount,
+                        "price":good.price,
+                        "mainImage":good.imageUrlStr,
+                        "color":good.color,
+                        "size":good.size]
+            itemArr.append(dict)
+        }
+        let cocoaArray : NSArray = itemArr
+        cocoaArray.writeToFile(cartFilePath(), atomically: true)
     }
     
     func setupBottomView() {
@@ -127,30 +164,30 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
-    func readData() -> Bool {
-        if let path = NSBundle.mainBundle().pathForResource("Cart", ofType: "json") {
-            do {
-                let jsonData = try NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe)
-                do {
-                    let jsonResult = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as! NSArray
-                    for itemObj in jsonResult {
-                        let itemDict = itemObj as! NSDictionary
-                        let item = Goods(title: itemDict["itemTitle"] as! String,
-                                         amount: itemDict["amount"] as! String,
-                                         price: itemDict["price"] as! String,
-                                         imgUrlStr: itemDict["img"] as! String)
-                        items.append(item)
-                    }
-                } catch {
-                    return false
-                }
-            } catch {
-                return false
-            }
-            return true
-        }
-        return false
-    }
+//    func readData() -> Bool {
+//        if let path = NSBundle.mainBundle().pathForResource("Cart", ofType: "json") {
+//            do {
+//                let jsonData = try NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe)
+//                do {
+//                    let jsonResult = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as! NSArray
+//                    for itemObj in jsonResult {
+//                        let itemDict = itemObj as! NSDictionary
+//                        let item = Goods(title: itemDict["itemTitle"] as! String,
+//                                         amount: itemDict["amount"] as! String,
+//                                         price: itemDict["price"] as! String,
+//                                         imgUrlStr: itemDict["img"] as! String)
+//                        items.append(item)
+//                    }
+//                } catch {
+//                    return false
+//                }
+//            } catch {
+//                return false
+//            }
+//            return true
+//        }
+//        return false
+//    }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 140
@@ -165,7 +202,7 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseStr, forIndexPath: indexPath) as! CartTableViewCell
         cell.selectionStyle = .None
         let model = items[indexPath.row]
-        cell.refreshCellWithModel(model, color: color!, size: size!)
+        cell.refreshCellWithModel(model)
         
         return cell
     }

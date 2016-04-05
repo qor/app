@@ -125,7 +125,7 @@ class CartTableViewCell: UITableViewCell {
         checkBox.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    func refreshCellWithModel(model: Goods, color: String, size: String) {
+    func refreshCellWithModel(model: Goods) {
         titleLbl.text = model.title
         amountLbl.text = "x\(model.amount)"
         priceLbl.text = "$ \(model.price)"
@@ -136,10 +136,21 @@ class CartTableViewCell: UITableViewCell {
             uncheck()
         }
         
-        colorBtn.setTitle(color, forState: .Normal)
-        sizeBtn.setTitle(size, forState: .Normal)
-        colorBtn.isChosen = true
-        sizeBtn.isChosen = true
+        if let collor = model.color {
+            colorBtn.setTitle(collor, forState: .Normal)
+            colorBtn.isChosen = true
+            colorBtn.hidden = false
+        } else {
+            colorBtn.hidden = true
+        }
+        if let ssize = model.size {
+            sizeBtn.setTitle(ssize, forState: .Normal)
+            sizeBtn.isChosen = true
+            sizeBtn.hidden = false
+        } else {
+            sizeBtn.hidden = true
+        }
+        
         
         imgV.kf_setImageWithURL(NSURL(string: "\(APIClient.sharedClient.base)\(model.imageUrlStr)")!)
     }

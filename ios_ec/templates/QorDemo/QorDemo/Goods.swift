@@ -14,11 +14,15 @@ struct Goods {
     var price : String!
     var imageUrlStr : String!
     var isChecked = false
+    var color:String?
+    var size:String?
     
-    init(title: String, amount: String, price: String, imgUrlStr: String) {
+    init(title: String, amount: String, price: String, imgUrlStr: String, color: String, size: String) {
         self.title = title
         self.amount = amount
         self.price = price
         self.imageUrlStr = imgUrlStr
+        self.color = color
+        self.size = size
     }
 }
