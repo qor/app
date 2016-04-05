@@ -28,7 +28,6 @@
 		5DDB4B581CABC99E00482F01 /* CartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDB4B561CABC99E00482F01 /* CartTableViewCell.swift */; };
 		5DDB4B591CABC99E00482F01 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDB4B571CABC99E00482F01 /* CartViewController.swift */; };
 		5DDB4B5D1CABD68600482F01 /* Goods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDB4B5C1CABD68600482F01 /* Goods.swift */; };
-		5DDB4B5F1CABD77A00482F01 /* Cart.json in Resources */ = {isa = PBXBuildFile; fileRef = 5DDB4B5E1CABD77A00482F01 /* Cart.json */; };
 		93E47DEB0D74702BB15888CB /* Pods_QorDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C93AA5B8B059C12857A6015 /* Pods_QorDemo.framework */; };
 /* End PBXBuildFile section */
 
@@ -57,7 +56,6 @@
 		5DDB4B561CABC99E00482F01 /* CartTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CartTableViewCell.swift; path = cart/CartTableViewCell.swift; sourceTree = "<group>"; };
 		5DDB4B571CABC99E00482F01 /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CartViewController.swift; path = cart/CartViewController.swift; sourceTree = "<group>"; };
 		5DDB4B5C1CABD68600482F01 /* Goods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Goods.swift; sourceTree = "<group>"; };
-		5DDB4B5E1CABD77A00482F01 /* Cart.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Cart.json; sourceTree = "<group>"; };
 		B472446EFD6D878449ED2B07 /* Pods-QorDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QorDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-QorDemo/Pods-QorDemo.release.xcconfig"; sourceTree = "<group>"; };
 		D538487DA81FED16333B7D34 /* Pods-QorDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QorDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-QorDemo/Pods-QorDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,7 +103,6 @@
 				5D336A031C9FB8020004B4AB /* Assets.xcassets */,
 				5D336A051C9FB8020004B4AB /* LaunchScreen.storyboard */,
 				5D336A081C9FB8020004B4AB /* Info.plist */,
-				5DDB4B5E1CABD77A00482F01 /* Cart.json */,
 			);
 			path = QorDemo;
 			sourceTree = "<group>";
@@ -250,7 +247,6 @@
 			files = (
 				5D336A071C9FB8020004B4AB /* LaunchScreen.storyboard in Resources */,
 				5D336A041C9FB8020004B4AB /* Assets.xcassets in Resources */,
-				5DDB4B5F1CABD77A00482F01 /* Cart.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

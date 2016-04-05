@@ -166,31 +166,6 @@ class CartViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-//    func readData() -> Bool {
-//        if let path = NSBundle.mainBundle().pathForResource("Cart", ofType: "json") {
-//            do {
-//                let jsonData = try NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe)
-//                do {
-//                    let jsonResult = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.MutableContainers) as! NSArray
-//                    for itemObj in jsonResult {
-//                        let itemDict = itemObj as! NSDictionary
-//                        let item = Goods(title: itemDict["itemTitle"] as! String,
-//                                         amount: itemDict["amount"] as! String,
-//                                         price: itemDict["price"] as! String,
-//                                         imgUrlStr: itemDict["img"] as! String)
-//                        items.append(item)
-//                    }
-//                } catch {
-//                    return false
-//                }
-//            } catch {
-//                return false
-//            }
-//            return true
-//        }
-//        return false
-//    }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 140
