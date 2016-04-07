@@ -80,6 +80,4 @@ File.open('runSimulator.sh', "w") do |f|
     end
 end
 
-system("echo 'begin make...'")
 system("make all")
-
