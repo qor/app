@@ -1,4 +1,4 @@
-target 'QorBoy' do
+target 'Example' do
   platform :ios, '9.0'
   use_frameworks!
   

@@ -1,6 +1,8 @@
 package ios_ec
 
 import "github.com/qor/app"
+import "os"
+import "os/exec"
 
 type EC struct {
 	app.Theme
@@ -20,5 +22,12 @@ func (ec *EC) ConfigureQorTheme(theme app.ThemeInterface) {
 }
 
 func (ec *EC) Build(theme app.ThemeInterface) error {
+	pwd, _ := os.Getwd() 	
+	os.Chdir("iOS/Temp")
+
+	//config ios project name, app icons, certificates and so on...
+	exec.Command("./build.rb").Run()
+	os.Chdir(pwd)
+
 	return nil
 }

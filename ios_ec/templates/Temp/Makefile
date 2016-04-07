@@ -1,8 +1,8 @@
 all: clean gyp pods
 
 gyp:
-	gyp QorBoy.gyp --depth=. -f xcode -DOS=ios
-	ruby scripts/fix-project.rb QorBoy.xcodeproj
+	gyp Example.gyp --depth=. -f xcode -DOS=ios
+	ruby scripts/fix-project.rb Example.xcodeproj
 
 pods:
 	bundle install
