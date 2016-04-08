@@ -12,6 +12,6 @@ func main() {
 	product := theme.GetPlugin("Product")
 	product.EnableOption("l10n")
 
-	Application.Use(&ios_ec.EC{Path: "iOS"})
+	Application.Use(&ios_ec.EC{Path: "iOS", Proj_name: Application.Name})
 	Application.Create()
 }
