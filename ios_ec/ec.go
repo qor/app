@@ -175,6 +175,7 @@ func (ec *EC) Build(theme app.ThemeInterface) error {
 	exec.Command("make","all").Run()
 
 	os.Chdir(pwd)
-
+    exec.Command("mv", "iOS/Temp", fmt.Sprintf("iOS/%s", ec.Proj_name)).Run()
+    
 	return nil
 }
