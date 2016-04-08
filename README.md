@@ -23,7 +23,7 @@ cd $GOPATH/src/github.com/qor/app/example
 go run main.go
 
 # Run iOS
-cd $GOPATH/src/github.com/qor/app/example/iOS/Temp
+cd $GOPATH/src/github.com/qor/app/example/iOS/example
 ./runSimulator.sh
 # If failed, ensure you have Xcode command line tools installed
 xcode-select install
