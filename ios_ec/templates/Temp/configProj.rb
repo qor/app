@@ -79,5 +79,3 @@ File.open('runSimulator.sh', "w") do |f|
     	f << line
     end
 end
-
-system("make all")

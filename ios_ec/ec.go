@@ -22,11 +22,15 @@ func (ec *EC) ConfigureQorTheme(theme app.ThemeInterface) {
 }
 
 func (ec *EC) Build(theme app.ThemeInterface) error {
-	pwd, _ := os.Getwd() 	
+	pwd, _ := os.Getwd() 
 	os.Chdir("iOS/Temp")
 
 	//config ios project name, app icons, certificates and so on...
-	exec.Command("./build.rb").Run()
+	exec.Command("./configProj.rb").Run()
+
+	//generate Xcode project, install third-party libs and so on...
+	exec.Command("make","all").Run()
+
 	os.Chdir(pwd)
 
 	return nil
