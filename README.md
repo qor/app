@@ -22,11 +22,11 @@ go run application.go
 cd $GOPATH/src/github.com/qor/app/example
 go run main.go
 
-# Run iOS
+# before run iOS demo, ensure you have Xcode command line tools installed
+xcode-select --install
+# Run iOS, you may need to wait about 2 minutes for compiling and installing the app
 cd $GOPATH/src/github.com/qor/app/example/iOS/example
 ./runSimulator.sh
-# If failed, ensure you have Xcode command line tools installed
-xcode-select install
 ```
 
 ## License
