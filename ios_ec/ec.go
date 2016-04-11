@@ -6,6 +6,7 @@ import (
     "bytes"
     "bufio"
     "strings"
+    "regexp"
     "os/exec"
     "io/ioutil"
     "encoding/json"
@@ -123,6 +124,34 @@ func configPodfile(name string) {
     checkError(err)
 }
 
+func getIPhone5sHash() string {
+    var (
+        cmdOut []byte
+        errSH    error
+    )
+    cmdName := "instruments"
+    cmdArgs := []string{"-s", "devices"}
+    if cmdOut, errSH = exec.Command(cmdName, cmdArgs...).Output(); errSH != nil {
+        return ""
+    }
+
+    result := strings.Split(string(cmdOut), "\n")
+    iphone5sArr := []string{}
+    for _,v :=range result {
+        if strings.HasPrefix(strings.TrimSpace(v), "iPhone 5s") {
+            iphone5sArr = append(iphone5sArr, v)
+        }
+    }
+    iphone5sHash := ""
+    if len(iphone5sArr) > 0 {
+        iphone5sHash = iphone5sArr[len(iphone5sArr)-1]
+        re := regexp.MustCompile(`\[([^\[\]]*)\]`)
+        result = re.FindStringSubmatch(iphone5sHash)
+        iphone5sHash = result[len(result)-1]
+    } 
+    return iphone5sHash
+}
+
 func configRunShell(name string) {
 	file, err := os.Open("runSimulator.sh")
     checkError(err)
@@ -141,7 +170,13 @@ func configRunShell(name string) {
     		lines = append(lines, fmt.Sprintf("xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/%s.app", name))
     	} else if count == 15 {
     		lines = append(lines, fmt.Sprintf("xcrun simctl launch booted \"%s\"", name))
-    	} else {
+    	} else if count == 5 {
+            if len(getIPhone5sHash()) > 0 {
+                lines = append(lines, fmt.Sprintf("xcrun instruments -w '%s'", getIPhone5sHash()))
+            } else {
+                fmt.Println("There was an error running instruments -s devices command")
+            }
+        } else {
     		lines = append(lines, scanner.Text())
     	}
         count++

@@ -3,7 +3,7 @@
 killall 'Simulator'
 
 # launch
-xcrun instruments -w 'iPhone 5s (9.3)'
+xcrun instruments -w 'iPhone 5s'
 
 # build:
 xcodebuild -scheme Example -workspace Example.xcworkspace -destination 'platform=iphonesimulator,name=iPhone 5s' -derivedDataPath build
