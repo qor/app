@@ -21,7 +21,7 @@ func ProductShow(c *gin.Context) {
 	db.DB.Preload("ColorVariations.Images").Preload("ColorVariations.SizeVariations").Find(&product, "code = ?", c.Param("code"))
 
 	responder.With("html", func() {
-		config.Render.Render("product_show", nil, c.Request, c.Writer)
+		config.Render.Execute("product_show", nil, c.Request, c.Writer)
 	}).With([]string{"json"}, func() {
 		c.JSON(http.StatusOK, product)
 	}).Respond(c.Request)

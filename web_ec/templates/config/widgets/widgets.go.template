@@ -7,15 +7,15 @@ import (
 	"github.com/qor/widget"
 )
 
-var Widget *widget.WidgetInstance
+var Widgets *widget.Widgets
 
-func GetWidget() *widget.WidgetInstance {
-	if Widget == nil {
-		Widget = widget.New(&widget.Config{DB: db.DB})
-		admin.Admin.AddResource(Widget)
-		for key, value := range Widget.FuncMap() {
+func GetWidget() *widget.Widgets {
+	if Widgets == nil {
+		Widgets = widget.New(&widget.Config{DB: db.DB})
+		admin.Admin.AddResource(Widgets)
+		for key, value := range Widgets.FuncMap() {
 			config.Render.RegisterFuncMap(key, value)
 		}
 	}
-	return Widget
+	return Widgets
 }

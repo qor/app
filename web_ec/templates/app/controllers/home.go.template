@@ -6,5 +6,5 @@ import (
 )
 
 func Index(c *gin.Context) {
-	config.Render.Render("index", nil, c.Request, c.Writer)
+	config.Render.Execute("index", nil, c.Request, c.Writer)
 }
