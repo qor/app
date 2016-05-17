@@ -7,8 +7,7 @@ Qor Application Generator
 ```sh
 # Prepare ENV
 cd $GOPATH/src/github.com/qor
-git clone git@github.com:theplant/qor-app-generator.git
-mv qor-app-generator app
+git clone git@github.com:qor/app.git
 
 # Install GYP meta building system if you wants to generate iOS projects
 brew tap mgamer/homebrew-taps
